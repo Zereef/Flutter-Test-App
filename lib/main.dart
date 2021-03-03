@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
 
+import 'package:test_app/runtime_variables.dart';
+
+import 'marcarConsulta.dart';
+
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Test'),
-    );
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: MyHomePage(title: 'Flutter Test'),
+        routes: {
+          '/marcarConsulta': (context) => MarcarConsulta(),
+        });
   }
 }
 
@@ -37,6 +44,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Common.width = MediaQuery.of(context).size.width;
+    Common.height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -56,7 +65,10 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        // onPressed: _incrementCounter,
+        onPressed: () {
+          Navigator.pushNamed(context, "/marcarConsulta");
+        },
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ),
