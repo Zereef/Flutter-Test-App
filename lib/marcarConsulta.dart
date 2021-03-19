@@ -1,15 +1,14 @@
-import 'dart:convert';
-
+//main dart and flutter imports
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'dart:ui';
 
-import 'package:http/http.dart' as http;
+//packages
 import 'package:intl/intl.dart';
-
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:test_app/runtime_variables.dart';
 
+//costum import
+import 'package:test_app/runtime_variables.dart';
 import 'marcacaomodel.dart';
 
 class MarcarConsulta extends StatelessWidget {
@@ -18,177 +17,9 @@ class MarcarConsulta extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          BackColor(),
           BottomSpace(),
-          // CalendarioAssembled(),
-          TopSpace(),
-          //new
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: 90,
-              color: Colors.transparent,
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      child: Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: <Widget>[
-                          ClipRect(
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                              child: Container(
-                                decoration: BoxDecoration(color: Colors.white.withOpacity(0)),
-                              ),
-                            ),
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color.fromRGBO(232, 80, 39, 0.10),
-                                      blurRadius: 8,
-                                      spreadRadius: 0.1,
-                                      offset: Offset(0, 4.0),
-                                    ),
-                                  ],
-                                ),
-                                child: RaisedButton(
-                                  padding: const EdgeInsets.fromLTRB(15, 10, 10, 10),
-                                  color: Colors.white,
-                                  elevation: 0,
-                                  splashColor: Colors.white,
-                                  focusColor: Colors.white,
-                                  highlightColor: Color.fromRGBO(137, 169, 255, 1),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(23.0),
-                                  ),
-                                  onPressed: () {
-                                    if (MarcacaoVariables.arraymarcacao.isNotEmpty) {
-                                      Navigator.pushNamed(context, '/marcar_Confirm');
-                                    } else {
-                                      showBrevementeDialog(context);
-                                    }
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.all(0),
-                                    color: Colors.transparent,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          'Confirmar marcação',
-                                          style: GoogleFonts.montserrat(
-                                            textStyle: TextStyle(
-                                              letterSpacing: -.33,
-                                              fontWeight: FontWeight.w600,
-                                              color: Color.fromRGBO(235, 137, 62, 1),
-                                              fontSize: 18,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          )
         ],
       ),
-    );
-  }
-}
-
-// ------------------------
-class BackColor extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(0.0),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: <Color>[Color.fromRGBO(246, 146, 32, 1), Color.fromRGBO(232, 102, 0, 1)],
-        ),
-      ),
-    );
-  }
-}
-
-class TopSpace extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Stack(
-          children: [
-            Container(
-              alignment: Alignment.center,
-              height: (Common.height / 5),
-              child: SafeArea(
-                child: Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(width: 15),
-                      Text(
-                        'Marcações',
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                        style: GoogleFonts.montserrat(
-                          textStyle: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                            fontSize: 21,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              alignment: Alignment.center,
-              height: (Common.height / 5 - 8),
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Text(
-                  'Marcar ',
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  style: GoogleFonts.montserrat(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }
@@ -216,6 +47,7 @@ showBrevementeDialog(BuildContext context) {
     },
   );
 }
+// ------------------------
 
 class BottomSpace extends StatelessWidget {
   @override
@@ -225,14 +57,10 @@ class BottomSpace extends StatelessWidget {
       children: <Widget>[
         Container(
           alignment: Alignment.bottomCenter,
-          height: (Common.height / 5) * 4,
+          height: Common.height,
           padding: EdgeInsets.all(0.0),
           decoration: BoxDecoration(
-            color: Color.fromRGBO(254, 244, 232, 1),
-            borderRadius: const BorderRadius.only(
-              topRight: const Radius.circular(50.0),
-              topLeft: const Radius.circular(50.0),
-            ),
+            color: Colors.blueGrey,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -259,6 +87,7 @@ class _GreenTODOState extends State<GreenTODO> {
   List<Widget> grupo = <Widget>[];
   int dia;
   int mes;
+
   int ano;
   String mesDysplay;
   String mesDysplaysmall;
@@ -270,6 +99,71 @@ class _GreenTODOState extends State<GreenTODO> {
   var futureAlbum;
 
   var primeiraRun = true;
+
+  void mesSelect(mes) {
+    switch (mes) {
+      case 1:
+        {
+          mesDysplay = "Janeiro";
+        }
+        break;
+      case 2:
+        {
+          mesDysplay = "Fevereiro";
+        }
+        break;
+      case 3:
+        {
+          mesDysplay = "Março";
+        }
+        break;
+      case 4:
+        {
+          mesDysplay = "Abril";
+        }
+        break;
+      case 5:
+        {
+          mesDysplay = "Maio";
+        }
+        break;
+      case 6:
+        {
+          mesDysplay = "Junho";
+        }
+        break;
+      case 7:
+        {
+          mesDysplay = "Julho";
+        }
+        break;
+      case 8:
+        {
+          mesDysplay = "Agosto";
+        }
+        break;
+      case 9:
+        {
+          mesDysplay = "Setembro";
+        }
+        break;
+      case 10:
+        {
+          mesDysplay = "Outubro";
+        }
+        break;
+      case 11:
+        {
+          mesDysplay = "Novembro";
+        }
+        break;
+      case 12:
+        {
+          mesDysplay = "Dezembro";
+        }
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -287,82 +181,14 @@ class _GreenTODOState extends State<GreenTODO> {
         ano = int.tryParse(DateTime(now.year).toString().substring(0, 4));
 
         for (var mesesParaMostrar = numMesesParaMostrar; mesesParaMostrar <= 10; mesesParaMostrar++) {
-          switch (mes) {
-            case 1:
-              {
-                mesDysplay = "Janeiro";
-              }
-              break;
-            case 2:
-              {
-                mesDysplay = "Fevereiro";
-              }
-              break;
-            case 3:
-              {
-                mesDysplay = "Março";
-              }
-              break;
-            case 4:
-              {
-                mesDysplay = "Abril";
-              }
-              break;
-            case 5:
-              {
-                mesDysplay = "Maio";
-              }
-              break;
-            case 6:
-              {
-                mesDysplay = "Junho";
-              }
-              break;
-            case 7:
-              {
-                mesDysplay = "Julho";
-              }
-              break;
-            case 8:
-              {
-                mesDysplay = "Agosto";
-              }
-              break;
-            case 9:
-              {
-                mesDysplay = "Setembro";
-              }
-              break;
-            case 10:
-              {
-                mesDysplay = "Outubro";
-              }
-              break;
-            case 11:
-              {
-                mesDysplay = "Novembro";
-              }
-              break;
-            case 12:
-              {
-                mesDysplay = "Dezembro";
-              }
-              break;
-          }
-
+          mesSelect(mes);
           if (dia == MarcacaoVariables.dia && mes == MarcacaoVariables.mes && ano == MarcacaoVariables.ano) {
             selected = true;
           } else {
             selected = false;
           }
 
-          grupo.add(MesButton(
-            dia: dia,
-            mes: mes,
-            ano: ano,
-            mesDysplay: mesDysplay,
-            selected: selected,
-          ));
+          grupo.add(MesButton(dia: dia, mes: mes, ano: ano, mesDysplay: mesDysplay, selected: selected));
 
           mes++;
 
@@ -394,68 +220,7 @@ class _GreenTODOState extends State<GreenTODO> {
           MarcacaoVariables.arraymarcacao.forEach((element) {
             var lista = element;
 
-            switch (lista[1]) {
-              case 1:
-                {
-                  mesDysplaysmall = "Jan";
-                }
-                break;
-              case 2:
-                {
-                  mesDysplaysmall = "Fev";
-                }
-                break;
-              case 3:
-                {
-                  mesDysplaysmall = "Mar";
-                }
-                break;
-              case 4:
-                {
-                  mesDysplaysmall = "Abr";
-                }
-                break;
-              case 5:
-                {
-                  mesDysplaysmall = "Mai";
-                }
-                break;
-              case 6:
-                {
-                  mesDysplaysmall = "Jun";
-                }
-                break;
-              case 7:
-                {
-                  mesDysplaysmall = "Jul";
-                }
-                break;
-              case 8:
-                {
-                  mesDysplaysmall = "Ago";
-                }
-                break;
-              case 9:
-                {
-                  mesDysplaysmall = "Set";
-                }
-                break;
-              case 10:
-                {
-                  mesDysplaysmall = "Out";
-                }
-                break;
-              case 11:
-                {
-                  mesDysplaysmall = "Nov";
-                }
-                break;
-              case 12:
-                {
-                  mesDysplaysmall = "Dez";
-                }
-                break;
-            }
+            mesSelect(lista[1]);
 
             lista[3].forEach((element) {
               databottom.add(MarcButton(
@@ -468,9 +233,6 @@ class _GreenTODOState extends State<GreenTODO> {
             });
           });
         }
-        // else {
-        //   return Center(heightFactor: 2, child: CircularProgressIndicator());
-        // }
 
         if (MarcacaoVariables.tipo == "Consulta") {
           return Expanded(
@@ -480,24 +242,6 @@ class _GreenTODOState extends State<GreenTODO> {
               child: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "Especialidade",
-                          style: GoogleFonts.montserrat(
-                            textStyle: TextStyle(
-                              letterSpacing: 0,
-                              fontWeight: FontWeight.w600,
-                              color: Color.fromRGBO(232, 80, 39, 1),
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    DropdownEspecialidade(),
                     Padding(
                       padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
                       child: Align(
@@ -516,47 +260,6 @@ class _GreenTODOState extends State<GreenTODO> {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      margin: EdgeInsets.fromLTRB(30, 5, 30, 5),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: const BorderRadius.all(
-                          const Radius.circular(16.0),
-                        ),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          isExpanded: true,
-                          value: dropdownValueLocal,
-                          icon: Icon(Icons.arrow_drop_down, color: Color.fromRGBO(246, 146, 32, 1)),
-                          iconSize: 24,
-                          elevation: 16,
-                          style: GoogleFonts.montserrat(
-                            textStyle: TextStyle(
-                              letterSpacing: 0,
-                              fontWeight: FontWeight.w600,
-                              color: Color.fromRGBO(246, 146, 32, 1),
-                              fontSize: 15,
-                            ),
-                          ),
-                          underline: Container(height: 2, color: Color.fromRGBO(246, 146, 32, 1)),
-                          onChanged: (String newValue) {
-                            setState(() {
-                              dropdownValueLocal = newValue;
-                              MarcacaoVariables.consultaLocal = newValue;
-                            });
-                          },
-                          items: consultorios.map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value, overflow: TextOverflow.ellipsis),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                    Container(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
                       margin: EdgeInsets.fromLTRB(4, 0, 4, 0),
                       color: Colors.transparent,
@@ -564,38 +267,6 @@ class _GreenTODOState extends State<GreenTODO> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: grupo,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              "Disponibilidade",
-                              style: GoogleFonts.montserrat(
-                                textStyle: TextStyle(
-                                  letterSpacing: 0,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color.fromRGBO(232, 80, 39, 1),
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              " (dias)",
-                              style: GoogleFonts.montserrat(
-                                textStyle: TextStyle(
-                                  letterSpacing: 0,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color.fromRGBO(232, 80, 39, 1),
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                          ],
                         ),
                       ),
                     ),
@@ -620,24 +291,6 @@ class _GreenTODOState extends State<GreenTODO> {
               child: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "Especialidade",
-                          style: GoogleFonts.montserrat(
-                            textStyle: TextStyle(
-                              letterSpacing: 0,
-                              fontWeight: FontWeight.w600,
-                              color: Color.fromRGBO(232, 80, 39, 1),
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    DropdownEspecialidade(),
                     Container(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
                       margin: EdgeInsets.fromLTRB(4, 0, 4, 0),
@@ -646,38 +299,6 @@ class _GreenTODOState extends State<GreenTODO> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: grupo,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              "Disponibilidade",
-                              style: GoogleFonts.montserrat(
-                                textStyle: TextStyle(
-                                  letterSpacing: 0,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color.fromRGBO(232, 80, 39, 1),
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              " (dias)",
-                              style: GoogleFonts.montserrat(
-                                textStyle: TextStyle(
-                                  letterSpacing: 0,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color.fromRGBO(232, 80, 39, 1),
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                          ],
                         ),
                       ),
                     ),
@@ -695,84 +316,6 @@ class _GreenTODOState extends State<GreenTODO> {
             ),
           );
         }
-      },
-    );
-  }
-}
-
-class DropdownEspecialidade extends StatefulWidget {
-  @override
-  _DropdownEspecialidadeState createState() => _DropdownEspecialidadeState();
-}
-
-class _DropdownEspecialidadeState extends State<DropdownEspecialidade> {
-  String dropdownValueEspecialidade = 'Psicologia';
-  var futurejson;
-  bool primeiraRun = true;
-  @override
-  Widget build(BuildContext context) {
-    futurejson = fetchEspecialidades();
-    return FutureBuilder<EspecialidadesList>(
-      future: futurejson,
-      builder: (context, snapshot) {
-        List<String> consultorios2 = [];
-
-        var teste2;
-
-        if (snapshot.hasData) {
-          teste2 = snapshot.data.especialidadeslist;
-
-          if (primeiraRun) {
-            dropdownValueEspecialidade = MarcacaoVariables.consultaEspecialidade ?? teste2[0].nomeEspecialidade;
-            MarcacaoVariables.consultaEspecialidade = dropdownValueEspecialidade;
-            primeiraRun = !primeiraRun;
-          }
-
-          teste2.forEach((element) {
-            consultorios2.add(element.nomeEspecialidade);
-          });
-        }
-
-        return Container(
-          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-          margin: EdgeInsets.fromLTRB(30, 5, 30, 5),
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: const BorderRadius.all(
-              const Radius.circular(16.0),
-            ),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              isExpanded: true,
-              value: dropdownValueEspecialidade,
-              icon: Icon(Icons.arrow_drop_down, color: Color.fromRGBO(246, 146, 32, 1)),
-              iconSize: 24,
-              elevation: 2,
-              style: GoogleFonts.montserrat(
-                textStyle: TextStyle(
-                  letterSpacing: 0,
-                  fontWeight: FontWeight.w600,
-                  color: Color.fromRGBO(246, 146, 32, 1),
-                  fontSize: 15,
-                ),
-              ),
-              onChanged: (String newValue) {
-                setState(() {
-                  dropdownValueEspecialidade = newValue;
-                  MarcacaoVariables.consultaEspecialidade = newValue;
-                });
-              },
-              items: consultorios2.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value, overflow: TextOverflow.ellipsis),
-                );
-              }).toList(),
-            ),
-          ),
-        );
       },
     );
   }
@@ -890,7 +433,7 @@ class CalendarioAssembled extends StatelessWidget {
   var numeroParaMostrar = "";
 
   //--------------------------------------------
-  var small = EdgeInsets.fromLTRB(0, 5, 0, 5);
+  var small = EdgeInsets.fromLTRB(5, 5, 5, 5);
   List diaType;
   var arr1 = [];
   var arr2 = [];
@@ -899,20 +442,39 @@ class CalendarioAssembled extends StatelessWidget {
   var datadysplay = "";
   var colorCont2 = Colors.transparent;
   var container = Container();
+
+  //--------------------------------------------
   @override
   Widget build(BuildContext context) {
+    void mesSelect(type) {
+      switch (type) {
+        case 1: //teleconsulta
+          {
+            cor = Color.fromRGBO(255, 255, 255, 1);
+            colorCont = Color.fromRGBO(137, 169, 255, 1);
+          }
+          break;
+        case 2: //Normal
+          {
+            cor = Color.fromRGBO(255, 255, 255, 1);
+            colorCont = Color.fromRGBO(183, 67, 52, 1);
+          }
+          break;
+        case 3: //a aguardar
+          {
+            cor = Color.fromRGBO(255, 255, 255, 1);
+            colorCont = Color.fromRGBO(180, 180, 180, 1);
+          }
+          break;
+      }
+    }
+
     linhaDiasSemana.clear();
     consultas.clear();
     rowgroup.clear();
 
     arr1.clear();
     arr2.clear();
-
-    if (Common.width < 370) {
-      small = EdgeInsets.fromLTRB(2, 2, 2, 2);
-    } else {
-      small = EdgeInsets.fromLTRB(5, 5, 5, 5);
-    }
 
     //--------------------------------------------
     //obter primeiro dia do mes
@@ -981,35 +543,16 @@ class CalendarioAssembled extends StatelessWidget {
           if (numeroRepeticoesMesAnterior > contadorNumeroMesAnterior) {
             var firstdaytableDateint = int.tryParse(firstdaytableDate) + i;
             numeroParaMostrar = firstdaytableDateint.toString();
-            cor = Color.fromRGBO(137, 169, 255, 1);
+            cor = Colors.black;
             font = FontWeight.w400;
           } else {
-            cor = Color.fromRGBO(246, 146, 32, 1);
+            cor = Colors.red;
             font = FontWeight.w500;
             //--------------------------------------------
             if (arr1.contains(contadorNumeroDoMesAtual + 1)) {
               var possition = arr1.indexOf(contadorNumeroDoMesAtual + 1);
               var type = arr2[possition];
-              switch (type) {
-                case 1: //teleconsulta
-                  {
-                    cor = Color.fromRGBO(255, 255, 255, 1);
-                    colorCont = Color.fromRGBO(137, 169, 255, 1);
-                  }
-                  break;
-                case 2: //Normal
-                  {
-                    cor = Color.fromRGBO(255, 255, 255, 1);
-                    colorCont = Color.fromRGBO(183, 67, 52, 1);
-                  }
-                  break;
-                case 3: //a aguardar
-                  {
-                    cor = Color.fromRGBO(255, 255, 255, 1);
-                    colorCont = Color.fromRGBO(180, 180, 180, 1);
-                  }
-                  break;
-              }
+              mesSelect(type);
             } else {
               colorCont = Colors.transparent;
             }
@@ -1019,32 +562,13 @@ class CalendarioAssembled extends StatelessWidget {
           }
         } else {
           if (int.tryParse(lastdayday) > contadorNumeroDoMesAtual) {
-            cor = Color.fromRGBO(246, 146, 32, 1);
+            cor = Colors.red;
             font = FontWeight.w500;
             //--------------------------------------------
             if (arr1.contains(contadorNumeroDoMesAtual + 1)) {
               var possition = arr1.indexOf(contadorNumeroDoMesAtual + 1);
               var type = arr2[possition];
-              switch (type) {
-                case 1: //teleconsulta
-                  {
-                    cor = Color.fromRGBO(255, 255, 255, 1);
-                    colorCont = Color.fromRGBO(137, 169, 255, 1);
-                  }
-                  break;
-                case 2: //Normal
-                  {
-                    cor = Color.fromRGBO(255, 255, 255, 1);
-                    colorCont = Color.fromRGBO(183, 67, 52, 1);
-                  }
-                  break;
-                case 3: //a aguardar
-                  {
-                    cor = Color.fromRGBO(255, 255, 255, 1);
-                    colorCont = Color.fromRGBO(180, 180, 180, 1);
-                  }
-                  break;
-              }
+              mesSelect(type);
             } else {
               colorCont = Colors.transparent;
             }
@@ -1054,7 +578,7 @@ class CalendarioAssembled extends StatelessWidget {
           } else {
             contadorNumerosDoUltimoMes = contadorNumerosDoUltimoMes + 1;
             numeroParaMostrar = contadorNumerosDoUltimoMes.toString();
-            cor = Color.fromRGBO(137, 169, 255, 1);
+            cor = Colors.black;
             font = FontWeight.w400;
           }
         }
@@ -1125,8 +649,6 @@ class _DiaButtonState extends State<DiaButton> {
 
     var data = "";
     var datasend = "";
-
-    //
 
     void horasTimePicker() async {
       DatePicker.showTimePicker(
@@ -1238,8 +760,6 @@ class _DiaButtonState extends State<DiaButton> {
         locale: LocaleType.pt,
       );
     }
-
-    //
 
     MarcacaoVariables.arraymarcacao.forEach((listElement) {
       if (listElement[0] == MarcacaoVariables.ano &&
@@ -1441,6 +961,7 @@ class _MarcButtonState extends State<MarcButton> {
   }
 }
 
+// ------------------------
 Future<ConsultorioList> fetchAlbum() async {
   throw Exception('Sem Net');
 }
