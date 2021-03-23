@@ -15,65 +15,30 @@ class MarcarConsulta extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          BottomSpace(),
+          Container(
+            alignment: Alignment.bottomCenter,
+            height: Common.height,
+            padding: EdgeInsets.all(0.0),
+            decoration: BoxDecoration(
+              color: Colors.blueGrey,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                GreenTODO(),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-showBrevementeDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: RichText(
-          text: TextSpan(
-            style: GoogleFonts.montserrat(textStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.black)),
-            children: <TextSpan>[TextSpan(text: 'Selecionar pelo menos 1 dia!', style: TextStyle(fontSize: 15))],
-          ),
-        ),
-        actions: [
-          FlatButton(
-            child: Text("Ok"),
-            onPressed: () async {
-              Navigator.of(context).pop();
-            },
-          )
-        ],
-      );
-    },
-  );
-}
 // ------------------------
-
-class BottomSpace extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        Container(
-          alignment: Alignment.bottomCenter,
-          height: Common.height,
-          padding: EdgeInsets.all(0.0),
-          decoration: BoxDecoration(
-            color: Colors.blueGrey,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              GreenTODO(),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class GreenTODO extends StatefulWidget {
   @override
   _GreenTODOState createState() => _GreenTODOState();
@@ -221,16 +186,6 @@ class _GreenTODOState extends State<GreenTODO> {
             var lista = element;
 
             mesSelect(lista[1]);
-
-            lista[3].forEach((element) {
-              databottom.add(MarcButton(
-                dia: lista[2],
-                mes: lista[1],
-                ano: lista[0],
-                mesDysplay: mesDysplaysmall,
-                element: element,
-              ));
-            });
           });
         }
 
@@ -242,23 +197,6 @@ class _GreenTODOState extends State<GreenTODO> {
               child: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          "Local",
-                          style: GoogleFonts.montserrat(
-                            textStyle: TextStyle(
-                              letterSpacing: 0,
-                              fontWeight: FontWeight.w600,
-                              color: Color.fromRGBO(232, 80, 39, 1),
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
                     Container(
                       padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
                       margin: EdgeInsets.fromLTRB(4, 0, 4, 0),
@@ -335,6 +273,7 @@ class MesButton extends StatelessWidget {
     @required this.mesDysplay,
     @required this.selected,
   });
+
   @override
   Widget build(BuildContext context) {
     if (selected) {
@@ -411,8 +350,8 @@ class CalendarioAssembled extends StatelessWidget {
   var sunday = 7;
   var saturday = 6;
   var now = DateTime.now();
-  var firstdaytable = DateTime.now();
-  var lastdaytable = DateTime.now();
+  var firstday = DateTime.now();
+  var lastday = DateTime.now();
 
   //--------------------------------------------
   var lines = <Widget>[];
@@ -477,24 +416,23 @@ class CalendarioAssembled extends StatelessWidget {
     arr2.clear();
 
     //--------------------------------------------
-    //obter primeiro dia do mes
-    var firstday = new DateTime(2021, 3, 1);
-    firstdaytable = firstday;
-    var numeroRepeticoesMesAnterior = 0;
-    while (firstdaytable.weekday != sunday) {
-      firstdaytable = firstdaytable.subtract(new Duration(days: 1));
-      numeroRepeticoesMesAnterior++;
-    }
-    var firstdaytableDate = DateFormat.d().format(firstdaytable);
+
+    int testMonthAdd = 2;
+    DateTime firstday = new DateTime(now.year, now.month + testMonthAdd, 1, 0, 0, 0, 0); //obter primeiro dia do mes
+    DateTime lastday = new DateTime(now.year, now.month + testMonthAdd + 1, 0, 0, 0, 0, 0);
+
+    // ---------- obter primeiro dia do mes formulas ----------
+    DateTime calendarLastMonthStartDay = firstday.subtract(Duration(days: firstday.weekday)).add(new Duration(hours: 1));
+    // DateTime calendarLastMonthEndDay = firstday.subtract(Duration(hours: 1)); // should be used to remove the + 1 below - maybe its a bug
+    int amountOfDaysLastMonth = firstday.difference(calendarLastMonthStartDay).inDays + 1;
+    String firstdayDate = DateFormat.d().format(calendarLastMonthStartDay);
 
     //--------------------------------------------
-    //obter ultimo dia do mes
-    var lastday = new DateTime(2021, 3 + 1, 0);
-    var lastdayday = DateFormat.d().format(lastday);
 
-    lastdaytable = lastday;
-    while (lastdaytable.weekday != saturday) {
-      lastdaytable = lastdaytable.add(new Duration(days: 1));
+    //obter ultimo dia do mesformulas
+    var lastdayFormated = DateFormat.d().format(lastday);
+    while (lastday.weekday != saturday) {
+      lastday = lastday.add(new Duration(days: 1));
     }
 
     //--------------------------------------------
@@ -528,7 +466,7 @@ class CalendarioAssembled extends StatelessWidget {
 
     //--------------------------------------------
     var numeroDeColunas = 5;
-    if (numeroRepeticoesMesAnterior >= 5) {
+    if (amountOfDaysLastMonth >= 5) {
       numeroDeColunas = 6;
     }
 
@@ -540,9 +478,9 @@ class CalendarioAssembled extends StatelessWidget {
       lines = <Widget>[];
       for (var i = 0; i < 7; i++) {
         if (e == 0) {
-          if (numeroRepeticoesMesAnterior > contadorNumeroMesAnterior) {
-            var firstdaytableDateint = int.tryParse(firstdaytableDate) + i;
-            numeroParaMostrar = firstdaytableDateint.toString();
+          if (amountOfDaysLastMonth > contadorNumeroMesAnterior) {
+            var firstdayDateint = int.tryParse(firstdayDate) + i;
+            numeroParaMostrar = firstdayDateint.toString();
             cor = Colors.black;
             font = FontWeight.w400;
           } else {
@@ -561,7 +499,7 @@ class CalendarioAssembled extends StatelessWidget {
             numeroParaMostrar = contadorNumeroDoMesAtual.toString();
           }
         } else {
-          if (int.tryParse(lastdayday) > contadorNumeroDoMesAtual) {
+          if (int.tryParse(lastdayFormated) > contadorNumeroDoMesAtual) {
             cor = Colors.red;
             font = FontWeight.w500;
             //--------------------------------------------
@@ -804,10 +742,9 @@ class _DiaButtonState extends State<DiaButton> {
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Text("Aviso"),
-                content: Text(
-                    "Selecione em primeiro lugar a hora de início da sua disponibilidade, e por último a hora de fim."),
+                content: Text("Selecione em primeiro lugar a hora de início da sua disponibilidade, e por último a hora de fim."),
                 actions: [
-                  FlatButton(
+                  TextButton(
                     child: Text("Ok"),
                     onPressed: () async {
                       Navigator.of(context).pop();
@@ -847,120 +784,6 @@ class _DiaButtonState extends State<DiaButton> {
   }
 }
 
-// ignore: must_be_immutable
-class MarcButton extends StatefulWidget {
-  final int dia;
-  final int mes;
-  final int ano;
-  final String mesDysplay;
-  final String element;
-
-  MarcButton({
-    @required this.dia,
-    @required this.mesDysplay,
-    @required this.element,
-    @required this.mes,
-    @required this.ano,
-  });
-
-  @override
-  _MarcButtonState createState() => _MarcButtonState();
-}
-
-class _MarcButtonState extends State<MarcButton> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(0, 0, 0, 15),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: const BorderRadius.all(Radius.circular(16.0)),
-      ),
-      child: Row(
-        children: [
-          Container(
-            height: 52,
-            width: 38,
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(183, 67, 52, 1),
-              borderRadius: const BorderRadius.all(Radius.circular(16.0)),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  widget.dia.toString(),
-                  style: GoogleFonts.montserrat(
-                    textStyle: TextStyle(
-                      letterSpacing: 0,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
-                Text(
-                  widget.mesDysplay,
-                  style: GoogleFonts.montserrat(
-                    textStyle: TextStyle(
-                      letterSpacing: 0,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-              child: Row(
-                children: [
-                  Text(
-                    widget.element,
-                    style: GoogleFonts.montserrat(
-                      textStyle: TextStyle(
-                        letterSpacing: 0,
-                        fontWeight: FontWeight.w600,
-                        color: Color.fromRGBO(232, 102, 0, 1),
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              MarcacaoVariables.arraymarcacao.forEach((elementlist) {
-                if (elementlist[0] == widget.ano && elementlist[1] == widget.mes && elementlist[2] == widget.dia) {
-                  var index = MarcacaoVariables.arraymarcacao.indexOf(elementlist);
-                  if (elementlist[3].length > 1) {
-                    elementlist[3].forEach((data) {
-                      var indexData = MarcacaoVariables.arraymarcacao[index][3].indexOf(data);
-                      if (data == widget.element) {
-                        MarcacaoVariables.arraymarcacao[index][3].removeAt(indexData);
-                        MarcacaoVariables.arraymarcacao[index][4].removeAt(indexData);
-                        Navigator.pushReplacementNamed(context, '/marcar_consulta');
-                      }
-                    });
-                  } else {
-                    MarcacaoVariables.arraymarcacao.removeAt(index);
-                    Navigator.pushReplacementNamed(context, '/marcar_consulta');
-                  }
-                }
-              });
-            },
-          )
-        ],
-      ),
-    );
-  }
-}
-
 // ------------------------
 Future<ConsultorioList> fetchAlbum() async {
   throw Exception('Sem Net');
@@ -968,4 +791,28 @@ Future<ConsultorioList> fetchAlbum() async {
 
 Future<EspecialidadesList> fetchEspecialidades() async {
   throw Exception('Sem Net');
+}
+
+showBrevementeDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: RichText(
+          text: TextSpan(
+            style: GoogleFonts.montserrat(textStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.black)),
+            children: <TextSpan>[TextSpan(text: 'Selecionar pelo menos 1 dia!', style: TextStyle(fontSize: 15))],
+          ),
+        ),
+        actions: [
+          TextButton(
+            child: Text("Ok"),
+            onPressed: () async {
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      );
+    },
+  );
 }
