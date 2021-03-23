@@ -20,12 +20,10 @@ class Consultorio {
 class ConsultorioList {
   final List<Consultorio> consultoriolist;
 
-  ConsultorioList({
-    this.consultoriolist,
-  });
+  ConsultorioList({this.consultoriolist});
 
   factory ConsultorioList.fromJson(List<dynamic> parsedJson) {
-    List<Consultorio> med = new List<Consultorio>();
+    List<Consultorio> med = List<Consultorio>.empty(growable: true);
     med = parsedJson.map((i) => Consultorio.fromJson(i)).toList();
 
     return new ConsultorioList(consultoriolist: med);
@@ -54,12 +52,10 @@ class Especialidades {
 class EspecialidadesList {
   final List<Especialidades> especialidadeslist;
 
-  EspecialidadesList({
-    this.especialidadeslist,
-  });
+  EspecialidadesList({this.especialidadeslist});
 
   factory EspecialidadesList.fromJson(List<dynamic> parsedJson) {
-    List<Especialidades> med = new List<Especialidades>();
+    List<Especialidades> med = List<Especialidades>.empty(growable: true);
     med = parsedJson.map((i) => Especialidades.fromJson(i)).toList();
 
     return new EspecialidadesList(especialidadeslist: med);
