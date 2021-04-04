@@ -4,7 +4,7 @@ import 'dart:ui';
 
 //packages
 import 'package:intl/intl.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 //costum import
@@ -45,27 +45,19 @@ class GreenTODO extends StatefulWidget {
 }
 
 class _GreenTODOState extends State<GreenTODO> {
-  String dropdownValueEspecialidade = 'Psicologia';
-  String dropdownValueLocal = 'Coimbra';
-
-  var numMesesParaMostrar = 0;
-  List<Widget> grupo = <Widget>[];
-  int dia;
+  List<Widget> grupoDeMeses = <Widget>[];
+  Container mesList = Container();
+  int dia = 1;
   int mes;
 
   int ano;
   String mesDysplay;
-  String mesDysplaysmall;
 
-  var now = DateTime.now();
+  DateTime now = DateTime.now();
   bool selected = true;
 
-  // var futurejson;
-  var futureAlbum;
-
-  var primeiraRun = true;
-
-  void mesSelect(mes) {
+  // funções Do Seletor de meses
+  void mesDysplayName(mes) {
     switch (mes) {
       case 1:
         {
@@ -130,131 +122,72 @@ class _GreenTODOState extends State<GreenTODO> {
     }
   }
 
+  bool seletorDeMes(dia, mes, ano) {
+    switch ((dia == MarcacaoVariables.dia && mes == MarcacaoVariables.mes && ano == MarcacaoVariables.ano) || mes == 4) {
+      case true:
+        return true;
+        break;
+      default:
+        return false;
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // futurejson = fetchEspecialidades();
-    futureAlbum = fetchAlbum();
+    grupoDeMeses.clear(); // debug code
 
-    return FutureBuilder<ConsultorioList>(
-      // future: Future.wait([futureAlbum, futurejson]),
-      future: futureAlbum,
-      builder: (context, snapshot) {
-        grupo.clear();
+    mes = int.tryParse(DateTime(now.month).toString().substring(0, 4));
+    ano = int.tryParse(DateTime(now.year).toString().substring(0, 4));
 
-        dia = 1;
-        mes = int.tryParse(DateTime(now.month).toString().substring(0, 4));
-        ano = int.tryParse(DateTime(now.year).toString().substring(0, 4));
+    for (var mesesParaMostrar = 0; mesesParaMostrar <= 12; mesesParaMostrar++) {
+      mesDysplayName(mes);
 
-        for (var mesesParaMostrar = numMesesParaMostrar; mesesParaMostrar <= 10; mesesParaMostrar++) {
-          mesSelect(mes);
-          if (dia == MarcacaoVariables.dia && mes == MarcacaoVariables.mes && ano == MarcacaoVariables.ano) {
-            selected = true;
-          } else {
-            selected = false;
-          }
+      selected = seletorDeMes(dia, mes, ano);
 
-          grupo.add(MesButton(dia: dia, mes: mes, ano: ano, mesDysplay: mesDysplay, selected: selected));
+      grupoDeMeses.add(MesButton(
+        dia: dia,
+        mes: mes,
+        ano: ano,
+        mesDysplay: mesDysplay,
+        selected: selected,
+      ));
 
+      switch (mes == 13) {
+        case true:
+          mes = 1;
+          ano++;
+          break;
+        default:
           mes++;
+          break;
+      }
 
-          if (mes == 13) {
-            mes = 1;
-            ano++;
-          }
-        }
+      if (mesesParaMostrar == 12) {
+        mesList = Container(
+          padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+          color: Colors.deepPurpleAccent,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(children: grupoDeMeses),
+          ),
+        );
+      }
+    }
 
-        List<String> consultorios = [];
-
-        var teste;
-
-        var databottom = <Widget>[];
-
-        if (snapshot.hasData) {
-          teste = snapshot.data.consultoriolist;
-
-          if (primeiraRun) {
-            dropdownValueLocal = MarcacaoVariables.consultaLocal ?? teste[0].nomeConsultorio;
-            MarcacaoVariables.consultaLocal = dropdownValueLocal;
-            primeiraRun = !primeiraRun;
-          }
-
-          teste.forEach((element) {
-            consultorios.add(element.nomeConsultorio);
-          });
-
-          MarcacaoVariables.arraymarcacao.forEach((element) {
-            var lista = element;
-
-            mesSelect(lista[1]);
-          });
-        }
-
-        if (MarcacaoVariables.tipo == "Consulta") {
-          return Expanded(
-            child: Container(
-              margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
-              color: Colors.transparent,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
-                      margin: EdgeInsets.fromLTRB(4, 0, 4, 0),
-                      color: Colors.transparent,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: grupo,
-                        ),
-                      ),
-                    ),
-                    CalendarioAssembled(),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-                      child: Column(
-                        children: databottom,
-                      ),
-                    ),
-                    Container(height: 90),
-                  ],
-                ),
-              ),
-            ),
-          );
-        } else {
-          return Expanded(
-            child: Container(
-              margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
-              color: Colors.transparent,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
-                      margin: EdgeInsets.fromLTRB(4, 0, 4, 0),
-                      color: Colors.transparent,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: grupo,
-                        ),
-                      ),
-                    ),
-                    CalendarioAssembled(),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-                      child: Column(
-                        children: databottom,
-                      ),
-                    ),
-                    Container(height: 90),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }
-      },
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
+        color: Colors.transparent,
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              mesList,
+              CalendarioAssembled(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -328,124 +261,84 @@ class MesButton extends StatelessWidget {
   }
 }
 
-// ignore: must_be_immutable
 class CalendarioAssembled extends StatelessWidget {
-  var tamanhoLista = 1;
-  var num = 0;
+  // funções Do Calendario
+  int numberOfWeeks(monthBeforeAmountDays, amountOfDaysThisMonth) {
+    return monthBeforeAmountDays + amountOfDaysThisMonth <= 35 ? 5 : 6;
+  }
 
-  String tipoConsulta;
-  String medico;
-  int idMarcacao;
-  String dtInicio;
-  String consultorio;
-  int idEstMarcacao;
+  List mesSelect(type) {
+    Color colorCont;
+    Color cor;
+    switch (type) {
+      case 1: //teleconsulta
+        {
+          cor = Color.fromRGBO(255, 255, 255, 1);
+          colorCont = Color.fromRGBO(137, 169, 255, 1);
+        }
+        break;
+      case 2: //Normal
+        {
+          cor = Color.fromRGBO(255, 255, 255, 1);
+          colorCont = Color.fromRGBO(183, 67, 52, 1);
+        }
+        break;
+      case 3: //a aguardar
+        {
+          cor = Color.fromRGBO(255, 255, 255, 1);
+          colorCont = Color.fromRGBO(180, 180, 180, 1);
+        }
+        break;
+    }
+    return [cor, colorCont];
+  }
 
-  //--------------------------------------------
-  var arrayDiasSemana = ["D", "S", "T", "Q", "Q", "S", "S"];
-  var containerDiasSemana = Container();
-  var linhaDiasSemana = <Widget>[];
-  var rowDiasSemana = Row();
-
-  //--------------------------------------------
-  var sunday = 7;
-  var saturday = 6;
-  var now = DateTime.now();
-  var firstday = DateTime.now();
-  var lastday = DateTime.now();
-
-  //--------------------------------------------
-  var lines = <Widget>[];
-  var linegroup = <Widget>[];
-  var rowgroup = <Widget>[];
-  var row = Row();
-  var cont = GestureDetector();
-
-  //--------------------------------------------
-  var cor = Color.fromRGBO(137, 169, 255, 1);
-  var font = FontWeight.w600;
-  var colorCont = Colors.transparent;
-
-  //--------------------------------------------
-  var contadorNumeroMesAnterior = 0;
-  var contadorNumeroDoMesAtual = 0;
-  var contadorNumerosDoUltimoMes = 0;
-  var numeroParaMostrar = "";
-
-  //--------------------------------------------
-  var small = EdgeInsets.fromLTRB(5, 5, 5, 5);
-  List diaType;
-  var arr1 = [];
-  var arr2 = [];
-  var consultas = <Widget>[];
-  var stringtemp = "";
-  var datadysplay = "";
-  var colorCont2 = Colors.transparent;
-  var container = Container();
-
-  //--------------------------------------------
   @override
   Widget build(BuildContext context) {
-    void mesSelect(type) {
-      switch (type) {
-        case 1: //teleconsulta
-          {
-            cor = Color.fromRGBO(255, 255, 255, 1);
-            colorCont = Color.fromRGBO(137, 169, 255, 1);
-          }
-          break;
-        case 2: //Normal
-          {
-            cor = Color.fromRGBO(255, 255, 255, 1);
-            colorCont = Color.fromRGBO(183, 67, 52, 1);
-          }
-          break;
-        case 3: //a aguardar
-          {
-            cor = Color.fromRGBO(255, 255, 255, 1);
-            colorCont = Color.fromRGBO(180, 180, 180, 1);
-          }
-          break;
-      }
-    }
-
-    linhaDiasSemana.clear();
-    consultas.clear();
-    rowgroup.clear();
-
-    arr1.clear();
-    arr2.clear();
-
-    //--------------------------------------------
-
     int testMonthAdd = 2;
-    DateTime firstday = new DateTime(now.year, now.month + testMonthAdd, 1, 0, 0, 0, 0); //obter primeiro dia do mes
-    DateTime lastday = new DateTime(now.year, now.month + testMonthAdd + 1, 0, 0, 0, 0, 0);
 
-    // ---------- obter primeiro dia do mes formulas ----------
-    DateTime calendarLastMonthStartDay = firstday.subtract(Duration(days: firstday.weekday)).add(new Duration(hours: 1));
-    // DateTime calendarLastMonthEndDay = firstday.subtract(Duration(hours: 1)); // should be used to remove the + 1 below - maybe its a bug
-    int amountOfDaysLastMonth = firstday.difference(calendarLastMonthStartDay).inDays + 1;
-    String firstdayDate = DateFormat.d().format(calendarLastMonthStartDay);
+    //
+    List<String> arrayDiasSemana = ["D", "S", "T", "Q", "Q", "S", "S"];
 
-    //--------------------------------------------
+    List<Widget> linhaDiasSemana = <Widget>[];
+    List<Widget> lines = <Widget>[];
+    List<Widget> rowgroup = <Widget>[];
 
-    //obter ultimo dia do mesformulas
-    var lastdayFormated = DateFormat.d().format(lastday);
-    while (lastday.weekday != saturday) {
-      lastday = lastday.add(new Duration(days: 1));
-    }
+    List<dynamic> arr1 = [21, 24, 26]; // test values
+    List<dynamic> arr2 = [1, 2, 3]; // test values
 
-    //--------------------------------------------
-    //adiciona a linha dos dias da semana
-    for (var e = 0; e < 7; e++) {
-      containerDiasSemana = Container(
+    Color cor = Color.fromRGBO(137, 169, 255, 1);
+    FontWeight font = FontWeight.w600;
+    Color colorCont = Colors.transparent;
+    EdgeInsets small = EdgeInsets.fromLTRB(5, 5, 5, 5);
+
+    String numeroParaMostrar = "";
+
+    DateTime now = DateTime.now();
+    //
+
+    // ---------- obter primeiro dia e ultimo dia do mes selecionado ----------
+    DateTime thisMonthFirstDay = new DateTime(now.year, now.month + testMonthAdd, 1, 0, 0, 0, 0); //obter primeiro dia do mes ATUAL
+    DateTime lastday = new DateTime(now.year, now.month + testMonthAdd + 1, 0, 0, 0, 0, 0); //obter ultimo dia do mes ATUAL
+
+    // ---------- obter primeiro dia do ultimo mes formulas ----------
+    DateTime monthBeforeStartDay = thisMonthFirstDay.subtract(Duration(days: thisMonthFirstDay.weekday)).add(new Duration(hours: 1));
+    int monthBeforeAmountDays = thisMonthFirstDay.difference(monthBeforeStartDay).inDays + 1;
+    String firstdayFormated = DateFormat.d().format(monthBeforeStartDay);
+
+    // ---------- obter primeiro dia deste mes formulas ----------
+    int amountOfDaysThisMonth = lastday.difference(thisMonthFirstDay).inDays + 1;
+
+    // ---------- Adicionar Linha com os dias da semana ----------
+    arrayDiasSemana.forEach((dia) {
+      linhaDiasSemana.add(Container(
         color: Colors.transparent,
         alignment: Alignment.center,
         margin: small,
         height: 20,
         width: 20,
         child: Text(
-          arrayDiasSemana[e],
+          dia,
           textAlign: TextAlign.center,
           style: GoogleFonts.montserrat(
             textStyle: TextStyle(
@@ -455,84 +348,68 @@ class CalendarioAssembled extends StatelessWidget {
             ),
           ),
         ),
-      );
-      linhaDiasSemana.add(containerDiasSemana);
-    }
-    rowDiasSemana = Row(
+      ));
+    });
+
+    rowgroup.add(Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: linhaDiasSemana,
-    );
-    rowgroup.add(rowDiasSemana);
+    ));
 
-    //--------------------------------------------
-    var numeroDeColunas = 5;
-    if (amountOfDaysLastMonth >= 5) {
-      numeroDeColunas = 6;
-    }
-
-    //--------------------------------------------
-    contadorNumeroMesAnterior = 0;
-    contadorNumeroDoMesAtual = 0;
-    contadorNumerosDoUltimoMes = 0;
-    for (var e = 0; e < numeroDeColunas; e++) {
+    //valores para saber quando o mes começa e acaba
+    int contadorNumerosDoUltimoMes = 1;
+    int contadorNumeroDoMesAtual = 1;
+    int contadorDiasMesAnterior = int.tryParse(firstdayFormated);
+    int numeroDeColunas = numberOfWeeks(monthBeforeAmountDays, amountOfDaysThisMonth);
+    for (var e = 1; e <= numeroDeColunas; e++) {
       lines = <Widget>[];
       for (var i = 0; i < 7; i++) {
-        if (e == 0) {
-          if (amountOfDaysLastMonth > contadorNumeroMesAnterior) {
-            var firstdayDateint = int.tryParse(firstdayDate) + i;
-            numeroParaMostrar = firstdayDateint.toString();
+        if ((e == 1 && i < monthBeforeAmountDays) || (e >= numeroDeColunas && contadorNumeroDoMesAtual >= amountOfDaysThisMonth)) {
+          if (e == 1) {
+            // numeroParaMostrar = firstdayFormatedint.toString();
+            //
+            numeroParaMostrar = contadorDiasMesAnterior.toString();
+            contadorDiasMesAnterior++;
+            //
             cor = Colors.black;
             font = FontWeight.w400;
           } else {
-            cor = Colors.red;
-            font = FontWeight.w500;
-            //--------------------------------------------
-            if (arr1.contains(contadorNumeroDoMesAtual + 1)) {
-              var possition = arr1.indexOf(contadorNumeroDoMesAtual + 1);
-              var type = arr2[possition];
-              mesSelect(type);
-            } else {
-              colorCont = Colors.transparent;
-            }
-            //--------------------------------------------
-            contadorNumeroDoMesAtual = contadorNumeroDoMesAtual + 1;
-            numeroParaMostrar = contadorNumeroDoMesAtual.toString();
+            numeroParaMostrar = contadorNumerosDoUltimoMes.toString();
+            contadorNumerosDoUltimoMes++;
+            cor = Colors.black;
+            font = FontWeight.w400;
           }
         } else {
-          if (int.tryParse(lastdayFormated) > contadorNumeroDoMesAtual) {
-            cor = Colors.red;
-            font = FontWeight.w500;
-            //--------------------------------------------
-            if (arr1.contains(contadorNumeroDoMesAtual + 1)) {
-              var possition = arr1.indexOf(contadorNumeroDoMesAtual + 1);
-              var type = arr2[possition];
-              mesSelect(type);
-            } else {
-              colorCont = Colors.transparent;
-            }
-            //--------------------------------------------
-            contadorNumeroDoMesAtual = contadorNumeroDoMesAtual + 1;
-            numeroParaMostrar = contadorNumeroDoMesAtual.toString();
+          numeroParaMostrar = contadorNumeroDoMesAtual.toString();
+          contadorNumeroDoMesAtual++;
+          cor = Colors.greenAccent;
+          font = FontWeight.w400;
+          //
+          if (arr1.contains(contadorNumeroDoMesAtual - 1)) {
+            var possition = arr1.indexOf(contadorNumeroDoMesAtual - 1);
+            var type = arr2[possition];
+            List received = mesSelect(type);
+            cor = received[0];
+            colorCont = received[1];
           } else {
-            contadorNumerosDoUltimoMes = contadorNumerosDoUltimoMes + 1;
-            numeroParaMostrar = contadorNumerosDoUltimoMes.toString();
-            cor = Colors.black;
-            font = FontWeight.w400;
+            colorCont = Colors.transparent;
           }
         }
 
-        //--------------------------------------------
-
-        lines.add(DiaButton(
+        lines.add(diaButton(
+          context,
           colorCont: colorCont,
           cor: cor,
           font: font,
           numeroParaMostrar: numeroParaMostrar,
           small: small,
         ));
-        contadorNumeroMesAnterior++;
       }
-      rowgroup.add(Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: lines));
+
+      rowgroup.add(Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: lines,
+      ));
     }
     return Column(
       children: <Widget>[
@@ -557,164 +434,134 @@ class CalendarioAssembled extends StatelessWidget {
       ],
     );
   }
-}
 
-// ignore: must_be_immutable
-class DiaButton extends StatefulWidget {
-  final EdgeInsets small;
-  Color colorCont;
-  final String numeroParaMostrar;
-  final FontWeight font;
-  Color cor;
+  diaButton(BuildContext context, {Color colorCont, Color cor, FontWeight font, String numeroParaMostrar, EdgeInsets small}) {
+    var localsmall = small;
+    var localcolorCont = colorCont;
+    var localnumeroParaMostrar = numeroParaMostrar;
+    var localfont = font;
+    var localCor = cor;
 
-  DiaButton({
-    @required this.small,
-    @required this.colorCont,
-    @required this.numeroParaMostrar,
-    @required this.font,
-    @required this.cor,
-  });
-
-  @override
-  _DiaButtonState createState() => _DiaButtonState();
-}
-
-class _DiaButtonState extends State<DiaButton> {
-  @override
-  Widget build(BuildContext context) {
-    var horas = "";
-    var minutos = "";
-
-    var data = "";
-    var datasend = "";
-
-    void horasTimePicker() async {
-      DatePicker.showTimePicker(
-        context,
-        showSecondsColumn: false,
-        theme: DatePickerTheme(containerHeight: 210.0),
-        showTitleActions: true,
-        onConfirm: (time) {
-          horas = "";
-          minutos = "";
-          data = "";
-          datasend = "";
-
-          if (int.parse('${time.hour}') < 10) {
-            horas = '0${time.hour}';
-          } else {
-            horas = '${time.hour}';
-          }
-          if (int.parse('${time.minute}') < 10) {
-            minutos = '0${time.minute}';
-          } else {
-            minutos = '${time.minute}';
-          }
-          data = horas + " : " + minutos;
-          datasend = horas + ":" + minutos;
-          //
-          DatePicker.showTimePicker(
-            context,
-            showSecondsColumn: false,
-            theme: DatePickerTheme(
-              containerHeight: 210.0,
-            ),
-            showTitleActions: true,
-            onConfirm: (time) {
-              if (int.parse('${time.hour}') < 10) {
-                horas = '0${time.hour}';
-              } else {
-                horas = '${time.hour}';
-              }
-              if (int.parse('${time.minute}') < 10) {
-                minutos = '0${time.minute}';
-              } else {
-                minutos = '${time.minute}';
-              }
-              data = data + "  -  " + horas + " : " + minutos;
-              datasend = datasend + "-" + horas + ":" + minutos;
-
-              List datalist = [];
-              List datasendlist = [];
-
-              List lista = [];
-              bool run = false;
-
-              if (MarcacaoVariables.arraymarcacao.isNotEmpty) {
-                MarcacaoVariables.arraymarcacao.forEach((listElement) {
-                  if (run == false) {
-                    if (listElement[0] == MarcacaoVariables.ano &&
-                        listElement[1] == MarcacaoVariables.mes &&
-                        listElement[2] == int.parse(widget.numeroParaMostrar)) {
-                      var index = MarcacaoVariables.arraymarcacao.indexOf(listElement);
-
-                      MarcacaoVariables.arraymarcacao[index][3].add(data);
-                      MarcacaoVariables.arraymarcacao[index][4].add(datasend);
-                      run = !run;
-
-                      Navigator.pushReplacementNamed(context, '/marcar_consulta');
-                    }
-                  }
-                });
-
-                if (run == false) {
-                  lista.add(MarcacaoVariables.ano);
-                  lista.add(MarcacaoVariables.mes);
-                  lista.add(int.parse(widget.numeroParaMostrar));
-
-                  datalist.add(data);
-                  datasendlist.add(datasend);
-
-                  lista.add(datalist);
-                  lista.add(datasendlist);
-                  MarcacaoVariables.arraymarcacao.add(lista);
-                  run = !run;
-
-                  Navigator.pushReplacementNamed(context, '/marcar_consulta');
-                }
-              } else {
-                lista.add(MarcacaoVariables.ano);
-                lista.add(MarcacaoVariables.mes);
-                lista.add(int.parse(widget.numeroParaMostrar));
-
-                datalist.add(data);
-                datasendlist.add(datasend);
-
-                lista.add(datalist);
-                lista.add(datasendlist);
-                MarcacaoVariables.arraymarcacao.add(lista);
-
-                Navigator.pushReplacementNamed(context, '/marcar_consulta');
-              }
-
-              Navigator.pushReplacementNamed(context, '/marcar_consulta');
-            },
-            currentTime: DateTime.now(),
-            locale: LocaleType.pt,
-          );
-          //
-        },
-        currentTime: DateTime.now(),
-        locale: LocaleType.pt,
-      );
-    }
+    // var horas = "";
+    // var minutos = "";
+    // var data = "";
+    // var datasend = "";
+    // void horasTimePicker() async {
+    //   DatePicker.showTimePicker(
+    //     context,
+    //     showSecondsColumn: false,
+    //     theme: DatePickerTheme(containerHeight: 210.0),
+    //     showTitleActions: true,
+    //     onConfirm: (time) {
+    //       horas = "";
+    //       minutos = "";
+    //       data = "";
+    //       datasend = "";
+    //       if (int.parse('${time.hour}') < 10) {
+    //         horas = '0${time.hour}';
+    //       } else {
+    //         horas = '${time.hour}';
+    //       }
+    //       if (int.parse('${time.minute}') < 10) {
+    //         minutos = '0${time.minute}';
+    //       } else {
+    //         minutos = '${time.minute}';
+    //       }
+    //       data = horas + " : " + minutos;
+    //       datasend = horas + ":" + minutos;
+    //       //
+    //       DatePicker.showTimePicker(
+    //         context,
+    //         showSecondsColumn: false,
+    //         theme: DatePickerTheme(
+    //           containerHeight: 210.0,
+    //         ),
+    //         showTitleActions: true,
+    //         onConfirm: (time) {
+    //           if (int.parse('${time.hour}') < 10) {
+    //             horas = '0${time.hour}';
+    //           } else {
+    //             horas = '${time.hour}';
+    //           }
+    //           if (int.parse('${time.minute}') < 10) {
+    //             minutos = '0${time.minute}';
+    //           } else {
+    //             minutos = '${time.minute}';
+    //           }
+    //           data = data + "  -  " + horas + " : " + minutos;
+    //           datasend = datasend + "-" + horas + ":" + minutos;
+    //           List datalist = [];
+    //           List datasendlist = [];
+    //           List lista = [];
+    //           bool run = false;
+    //           if (MarcacaoVariables.arraymarcacao.isNotEmpty) {
+    //             MarcacaoVariables.arraymarcacao.forEach((listElement) {
+    //               if (run == false) {
+    //                 if (listElement[0] == MarcacaoVariables.ano &&
+    //                     listElement[1] == MarcacaoVariables.mes &&
+    //                     listElement[2] == int.parse(localnumeroParaMostrar)) {
+    //                   var index = MarcacaoVariables.arraymarcacao.indexOf(listElement);
+    //                   MarcacaoVariables.arraymarcacao[index][3].add(data);
+    //                   MarcacaoVariables.arraymarcacao[index][4].add(datasend);
+    //                   run = !run;
+    //                   Navigator.pushReplacementNamed(context, '/marcar_consulta');
+    //                 }
+    //               }
+    //             });
+    //             if (run == false) {
+    //               lista.add(MarcacaoVariables.ano);
+    //               lista.add(MarcacaoVariables.mes);
+    //               lista.add(int.parse(localnumeroParaMostrar));
+    //               datalist.add(data);
+    //               datasendlist.add(datasend);
+    //               lista.add(datalist);
+    //               lista.add(datasendlist);
+    //               MarcacaoVariables.arraymarcacao.add(lista);
+    //               run = !run;
+    //               Navigator.pushReplacementNamed(context, '/marcar_consulta');
+    //             }
+    //           } else {
+    //             lista.add(MarcacaoVariables.ano);
+    //             lista.add(MarcacaoVariables.mes);
+    //             lista.add(int.parse(localnumeroParaMostrar));
+    //             datalist.add(data);
+    //             datasendlist.add(datasend);
+    //             lista.add(datalist);
+    //             lista.add(datasendlist);
+    //             MarcacaoVariables.arraymarcacao.add(lista);
+    //             Navigator.pushReplacementNamed(context, '/marcar_consulta');
+    //           }
+    //           Navigator.pushReplacementNamed(context, '/marcar_consulta');
+    //         },
+    //         currentTime: DateTime.now(),
+    //         locale: LocaleType.pt,
+    //       );
+    //       //
+    //     },
+    //     currentTime: DateTime.now(),
+    //     locale: LocaleType.pt,
+    //   );
+    // }
 
     MarcacaoVariables.arraymarcacao.forEach((listElement) {
       if (listElement[0] == MarcacaoVariables.ano &&
           listElement[1] == MarcacaoVariables.mes &&
-          listElement[2] == int.parse(widget.numeroParaMostrar) &&
-          widget.cor == Color.fromRGBO(246, 146, 32, 1)) {
-        widget.cor = Colors.white;
-        widget.colorCont = Color.fromRGBO(183, 67, 52, 1);
+          listElement[2] == int.parse(localnumeroParaMostrar) &&
+          localCor == Color.fromRGBO(246, 146, 32, 1)) {
+        localCor = Colors.white;
+        localcolorCont = Color.fromRGBO(183, 67, 52, 1);
       }
     });
 
-    if (widget.cor == Color.fromRGBO(137, 169, 255, 1)) {
-      return Container(
+    return GestureDetector(
+      onTap: () {
+        dialogDia(context);
+      },
+      child: Container(
         alignment: Alignment.center,
-        margin: widget.small,
+        margin: localsmall,
         decoration: BoxDecoration(
-          color: widget.colorCont,
+          color: localcolorCont,
           borderRadius: const BorderRadius.all(
             const Radius.circular(25.0),
           ),
@@ -722,67 +569,232 @@ class _DiaButtonState extends State<DiaButton> {
         height: 28,
         width: 28,
         child: Text(
-          widget.numeroParaMostrar,
+          localnumeroParaMostrar,
           textAlign: TextAlign.center,
           style: GoogleFonts.montserrat(
             textStyle: TextStyle(
-              fontWeight: widget.font,
-              color: widget.cor,
+              fontWeight: localfont,
+              color: localCor,
               fontSize: 14,
             ),
           ),
         ),
-      ); //
-    } else {
-      return GestureDetector(
-        onTap: () {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text("Aviso"),
-                content: Text("Selecione em primeiro lugar a hora de início da sua disponibilidade, e por último a hora de fim."),
-                actions: [
-                  TextButton(
-                    child: Text("Ok"),
-                    onPressed: () async {
-                      Navigator.of(context).pop();
-                      horasTimePicker();
-                    },
-                  )
-                ],
-              );
-            },
-          );
-        },
-        child: Container(
-          alignment: Alignment.center,
-          margin: widget.small,
-          decoration: BoxDecoration(
-            color: widget.colorCont,
-            borderRadius: const BorderRadius.all(
-              const Radius.circular(25.0),
-            ),
-          ),
-          height: 28,
-          width: 28,
-          child: Text(
-            widget.numeroParaMostrar,
-            textAlign: TextAlign.center,
-            style: GoogleFonts.montserrat(
-              textStyle: TextStyle(
-                fontWeight: widget.font,
-                color: widget.cor,
-                fontSize: 14,
-              ),
-            ),
-          ),
-        ),
-      );
-    }
+      ),
+    );
+  }
+
+  Future dialogDia(BuildContext context) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Aviso (WIP)"),
+          content: Text("Qualquer mensagem pode aparecer aqui, qualquer coisa pode ser feita a clicar no dia"),
+          actions: [
+            TextButton(
+              child: Text("Ok"),
+              onPressed: () async {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 }
+
+// class DiaButton extends StatefulWidget {
+//   final EdgeInsets small;
+//   final Color colorCont;
+//   final String numeroParaMostrar;
+//   final FontWeight font;
+//   final Color cor;
+
+//   DiaButton({
+//     @required this.small,
+//     @required this.colorCont,
+//     @required this.numeroParaMostrar,
+//     @required this.font,
+//     @required this.cor,
+//   });
+
+//   @override
+//   _DiaButtonState createState() => _DiaButtonState();
+// }
+
+// class _DiaButtonState extends State<DiaButton> {
+//   @override
+//   Widget build(BuildContext context) {
+//     var localsmall = widget.small;
+//     var localcolorCont = widget.colorCont;
+//     var localnumeroParaMostrar = widget.numeroParaMostrar;
+//     var localfont = widget.font;
+//     var localCor = widget.cor;
+
+//     // var horas = "";
+//     // var minutos = "";
+//     // var data = "";
+//     // var datasend = "";
+//     // void horasTimePicker() async {
+//     //   DatePicker.showTimePicker(
+//     //     context,
+//     //     showSecondsColumn: false,
+//     //     theme: DatePickerTheme(containerHeight: 210.0),
+//     //     showTitleActions: true,
+//     //     onConfirm: (time) {
+//     //       horas = "";
+//     //       minutos = "";
+//     //       data = "";
+//     //       datasend = "";
+//     //       if (int.parse('${time.hour}') < 10) {
+//     //         horas = '0${time.hour}';
+//     //       } else {
+//     //         horas = '${time.hour}';
+//     //       }
+//     //       if (int.parse('${time.minute}') < 10) {
+//     //         minutos = '0${time.minute}';
+//     //       } else {
+//     //         minutos = '${time.minute}';
+//     //       }
+//     //       data = horas + " : " + minutos;
+//     //       datasend = horas + ":" + minutos;
+//     //       //
+//     //       DatePicker.showTimePicker(
+//     //         context,
+//     //         showSecondsColumn: false,
+//     //         theme: DatePickerTheme(
+//     //           containerHeight: 210.0,
+//     //         ),
+//     //         showTitleActions: true,
+//     //         onConfirm: (time) {
+//     //           if (int.parse('${time.hour}') < 10) {
+//     //             horas = '0${time.hour}';
+//     //           } else {
+//     //             horas = '${time.hour}';
+//     //           }
+//     //           if (int.parse('${time.minute}') < 10) {
+//     //             minutos = '0${time.minute}';
+//     //           } else {
+//     //             minutos = '${time.minute}';
+//     //           }
+//     //           data = data + "  -  " + horas + " : " + minutos;
+//     //           datasend = datasend + "-" + horas + ":" + minutos;
+//     //           List datalist = [];
+//     //           List datasendlist = [];
+//     //           List lista = [];
+//     //           bool run = false;
+//     //           if (MarcacaoVariables.arraymarcacao.isNotEmpty) {
+//     //             MarcacaoVariables.arraymarcacao.forEach((listElement) {
+//     //               if (run == false) {
+//     //                 if (listElement[0] == MarcacaoVariables.ano &&
+//     //                     listElement[1] == MarcacaoVariables.mes &&
+//     //                     listElement[2] == int.parse(localnumeroParaMostrar)) {
+//     //                   var index = MarcacaoVariables.arraymarcacao.indexOf(listElement);
+//     //                   MarcacaoVariables.arraymarcacao[index][3].add(data);
+//     //                   MarcacaoVariables.arraymarcacao[index][4].add(datasend);
+//     //                   run = !run;
+//     //                   Navigator.pushReplacementNamed(context, '/marcar_consulta');
+//     //                 }
+//     //               }
+//     //             });
+//     //             if (run == false) {
+//     //               lista.add(MarcacaoVariables.ano);
+//     //               lista.add(MarcacaoVariables.mes);
+//     //               lista.add(int.parse(localnumeroParaMostrar));
+//     //               datalist.add(data);
+//     //               datasendlist.add(datasend);
+//     //               lista.add(datalist);
+//     //               lista.add(datasendlist);
+//     //               MarcacaoVariables.arraymarcacao.add(lista);
+//     //               run = !run;
+//     //               Navigator.pushReplacementNamed(context, '/marcar_consulta');
+//     //             }
+//     //           } else {
+//     //             lista.add(MarcacaoVariables.ano);
+//     //             lista.add(MarcacaoVariables.mes);
+//     //             lista.add(int.parse(localnumeroParaMostrar));
+//     //             datalist.add(data);
+//     //             datasendlist.add(datasend);
+//     //             lista.add(datalist);
+//     //             lista.add(datasendlist);
+//     //             MarcacaoVariables.arraymarcacao.add(lista);
+//     //             Navigator.pushReplacementNamed(context, '/marcar_consulta');
+//     //           }
+//     //           Navigator.pushReplacementNamed(context, '/marcar_consulta');
+//     //         },
+//     //         currentTime: DateTime.now(),
+//     //         locale: LocaleType.pt,
+//     //       );
+//     //       //
+//     //     },
+//     //     currentTime: DateTime.now(),
+//     //     locale: LocaleType.pt,
+//     //   );
+//     // }
+
+//     MarcacaoVariables.arraymarcacao.forEach((listElement) {
+//       if (listElement[0] == MarcacaoVariables.ano &&
+//           listElement[1] == MarcacaoVariables.mes &&
+//           listElement[2] == int.parse(localnumeroParaMostrar) &&
+//           localCor == Color.fromRGBO(246, 146, 32, 1)) {
+//         localCor = Colors.white;
+//         localcolorCont = Color.fromRGBO(183, 67, 52, 1);
+//       }
+//     });
+
+//     return GestureDetector(
+//       onTap: () {
+//         dialogDia(context);
+//       },
+//       child: Container(
+//         alignment: Alignment.center,
+//         margin: localsmall,
+//         decoration: BoxDecoration(
+//           color: localcolorCont,
+//           borderRadius: const BorderRadius.all(
+//             const Radius.circular(25.0),
+//           ),
+//         ),
+//         height: 28,
+//         width: 28,
+//         child: Text(
+//           localnumeroParaMostrar,
+//           textAlign: TextAlign.center,
+//           style: GoogleFonts.montserrat(
+//             textStyle: TextStyle(
+//               fontWeight: localfont,
+//               color: localCor,
+//               fontSize: 14,
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   Future dialogDia(BuildContext context) {
+//     return showDialog(
+//       context: context,
+//       barrierDismissible: false,
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+//           title: Text("Aviso (WIP)"),
+//           content: Text("Qualquer mensagem pode aparecer aqui, qualquer coisa pode ser feita a clicar no dia"),
+//           actions: [
+//             TextButton(
+//               child: Text("Ok"),
+//               onPressed: () async {
+//                 Navigator.of(context).pop();
+//               },
+//             )
+//           ],
+//         );
+//       },
+//     );
+//   }
+// }
 
 // ------------------------
 Future<ConsultorioList> fetchAlbum() async {
