@@ -9,7 +9,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 //costum import
 import 'package:test_app/runtime_variables.dart';
-import 'marcacaomodel.dart';
 
 class MarcarConsulta extends StatelessWidget {
   @override
@@ -54,7 +53,16 @@ class _GreenTODOState extends State<GreenTODO> {
   String mesDysplay;
 
   DateTime now = DateTime.now();
-  bool selected = true;
+  int selectedMonth = 4;
+  int selectedYear = 2021;
+
+  // funções select month WIP
+  void selected(int mes, int ano) {
+    setState(() {
+      selectedMonth = mes;
+      selectedYear = ano;
+    });
+  }
 
   // funções Do Seletor de meses
   void mesDysplayName(mes) {
@@ -133,135 +141,6 @@ class _GreenTODOState extends State<GreenTODO> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    grupoDeMeses.clear(); // debug code
-
-    mes = int.tryParse(DateTime(now.month).toString().substring(0, 4));
-    ano = int.tryParse(DateTime(now.year).toString().substring(0, 4));
-
-    for (var mesesParaMostrar = 0; mesesParaMostrar <= 12; mesesParaMostrar++) {
-      mesDysplayName(mes);
-
-      selected = seletorDeMes(dia, mes, ano);
-
-      grupoDeMeses.add(MesButton(
-        dia: dia,
-        mes: mes,
-        ano: ano,
-        mesDysplay: mesDysplay,
-        selected: selected,
-      ));
-
-      switch (mes == 13) {
-        case true:
-          mes = 1;
-          ano++;
-          break;
-        default:
-          mes++;
-          break;
-      }
-
-      if (mesesParaMostrar == 12) {
-        mesList = Container(
-          padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-          color: Colors.deepPurpleAccent,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(children: grupoDeMeses),
-          ),
-        );
-      }
-    }
-
-    return Expanded(
-      child: Container(
-        margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
-        color: Colors.transparent,
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              mesList,
-              CalendarioAssembled(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class MesButton extends StatelessWidget {
-  final int dia;
-  final int mes;
-  final int ano;
-  final String mesDysplay;
-  final bool selected;
-
-  MesButton({
-    @required this.dia,
-    @required this.mes,
-    @required this.ano,
-    @required this.mesDysplay,
-    @required this.selected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (selected) {
-      return Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.all(const Radius.circular(23.0)),
-        ),
-        margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
-        padding: EdgeInsets.fromLTRB(20, 6, 20, 6),
-        child: Text(
-          mesDysplay + ", " + ano.toString(),
-          style: GoogleFonts.montserrat(
-            textStyle: TextStyle(
-              letterSpacing: 0,
-              fontWeight: FontWeight.w600,
-              color: Color.fromRGBO(246, 146, 32, 1),
-              fontSize: 16,
-            ),
-          ),
-        ),
-      );
-    } else {
-      return GestureDetector(
-        onTap: () {
-          MarcacaoVariables.dia = dia;
-          MarcacaoVariables.mes = mes;
-          MarcacaoVariables.ano = ano;
-          Navigator.of(context).pushReplacementNamed('/marcar_consulta');
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            borderRadius: const BorderRadius.all(const Radius.circular(23.0)),
-          ),
-          margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
-          padding: EdgeInsets.fromLTRB(20, 6, 20, 6),
-          child: Text(
-            mesDysplay,
-            style: GoogleFonts.montserrat(
-              textStyle: TextStyle(
-                letterSpacing: 0,
-                fontWeight: FontWeight.w500,
-                color: Color.fromRGBO(137, 169, 255, 1),
-                fontSize: 16,
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-  }
-}
-
-class CalendarioAssembled extends StatelessWidget {
   // funções Do Calendario
   int numberOfWeeks(monthBeforeAmountDays, amountOfDaysThisMonth) {
     return monthBeforeAmountDays + amountOfDaysThisMonth <= 35 ? 5 : 6;
@@ -293,33 +172,204 @@ class CalendarioAssembled extends StatelessWidget {
     return [cor, colorCont];
   }
 
+  //
   @override
   Widget build(BuildContext context) {
-    int testMonthAdd = 2;
-
+    grupoDeMeses.clear();
     //
+    mes = int.tryParse(DateTime(now.month).toString().substring(0, 4));
+    ano = int.tryParse(DateTime(now.year).toString().substring(0, 4));
+    //
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
+        color: Colors.transparent,
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              mesList2(),
+              calendario(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget mesList2() {
+    Container listaMeses;
+
+    for (var mesesParaMostrar = 0; mesesParaMostrar <= 12; mesesParaMostrar++) {
+      mesDysplayName(mes);
+      grupoDeMeses.add(mesButton(
+        context,
+        dia: dia,
+        mes: mes,
+        ano: ano,
+        mesDysplay: mesDysplay,
+      ));
+
+      if (mes == 12) {
+        mes = 1;
+        ano++;
+      } else {
+        mes++;
+      }
+
+      if (mesesParaMostrar == 12) {
+        listaMeses = Container(
+          padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+          color: Colors.deepPurpleAccent,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(children: grupoDeMeses),
+          ),
+        );
+      }
+    }
+    return listaMeses;
+  }
+
+  // select de meses WIP
+  Widget mesButton(BuildContext context, {int dia, int mes, int ano, String mesDysplay}) {
+    if (mes == selectedMonth && ano == selectedYear) {
+      return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.all(const Radius.circular(23.0)),
+        ),
+        margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
+        padding: EdgeInsets.fromLTRB(20, 6, 20, 6),
+        child: Text(
+          mesDysplay + ", " + ano.toString(),
+          style: GoogleFonts.montserrat(
+            textStyle: TextStyle(
+              letterSpacing: 0,
+              fontWeight: FontWeight.w600,
+              color: Color.fromRGBO(246, 146, 32, 1),
+              fontSize: 16,
+            ),
+          ),
+        ),
+      );
+    } else {
+      return GestureDetector(
+        onTap: () {
+          MarcacaoVariables.dia = dia;
+          MarcacaoVariables.mes = mes;
+          MarcacaoVariables.ano = ano;
+          selected(mes, ano);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: const BorderRadius.all(const Radius.circular(23.0)),
+          ),
+          margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
+          padding: EdgeInsets.fromLTRB(20, 6, 20, 6),
+          child: Text(
+            mesDysplay,
+            style: GoogleFonts.montserrat(
+              textStyle: TextStyle(
+                letterSpacing: 0,
+                fontWeight: FontWeight.w500,
+                color: Color.fromRGBO(137, 169, 255, 1),
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+  }
+
+  // select dia WIP
+  Widget diaButton(BuildContext context, {Color colorCont, Color cor, FontWeight font, String numeroParaMostrar, EdgeInsets small}) {
+    MarcacaoVariables.arraymarcacao.forEach((listElement) {
+      if (listElement[0] == MarcacaoVariables.ano &&
+          listElement[1] == MarcacaoVariables.mes &&
+          listElement[2] == int.parse(numeroParaMostrar) &&
+          cor == Color.fromRGBO(246, 146, 32, 1)) {
+        cor = Colors.white;
+        colorCont = Color.fromRGBO(183, 67, 52, 1);
+      }
+    });
+
+    return GestureDetector(
+      onTap: () {
+        dialogDia(context, numeroParaMostrar);
+      },
+      child: Container(
+        alignment: Alignment.center,
+        margin: small,
+        decoration: BoxDecoration(
+          color: colorCont,
+          borderRadius: const BorderRadius.all(
+            const Radius.circular(25.0),
+          ),
+        ),
+        height: 28,
+        width: 28,
+        child: Text(
+          numeroParaMostrar,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.montserrat(
+            textStyle: TextStyle(
+              fontWeight: font,
+              color: cor,
+              fontSize: 14,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // dialog of day selected WIP
+  Future dialogDia(BuildContext context, String numeroParaMostrar) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Aviso (WIP)"),
+          content: Text("Qualquer mensagem pode aparecer aqui, qualquer coisa pode ser feita a clicar no dia" + numeroParaMostrar),
+          actions: [
+            TextButton(
+              child: Text("Ok"),
+              onPressed: () async {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  // Calendario fully build WIP
+  Widget calendario() {
     List<String> arrayDiasSemana = ["D", "S", "T", "Q", "Q", "S", "S"];
 
     List<Widget> linhaDiasSemana = <Widget>[];
     List<Widget> lines = <Widget>[];
     List<Widget> rowgroup = <Widget>[];
 
-    List<dynamic> arr1 = [21, 24, 26]; // test values
-    List<dynamic> arr2 = [1, 2, 3]; // test values
+    List<dynamic> arrayselectedMonthDias = [21, 24, 26]; // test values
+    List<dynamic> arrayselectedMonthTypo = [1, 2, 3]; // test values
 
     Color cor = Color.fromRGBO(137, 169, 255, 1);
     FontWeight font = FontWeight.w600;
     Color colorCont = Colors.transparent;
     EdgeInsets small = EdgeInsets.fromLTRB(5, 5, 5, 5);
 
-    String numeroParaMostrar = "";
+    String numeroParaMostrar;
 
-    DateTime now = DateTime.now();
-    //
+    // DateTime now = DateTime.now();
 
     // ---------- obter primeiro dia e ultimo dia do mes selecionado ----------
-    DateTime thisMonthFirstDay = new DateTime(now.year, now.month + testMonthAdd, 1, 0, 0, 0, 0); //obter primeiro dia do mes ATUAL
-    DateTime lastday = new DateTime(now.year, now.month + testMonthAdd + 1, 0, 0, 0, 0, 0); //obter ultimo dia do mes ATUAL
+    DateTime thisMonthFirstDay = new DateTime(selectedYear, selectedMonth, 1, 0, 0, 0, 0); //obter primeiro dia do mes ATUAL
+    DateTime lastday = new DateTime(selectedYear, selectedMonth + 1, 0, 0, 0, 0, 0); //obter ultimo dia do mes ATUAL
 
     // ---------- obter primeiro dia do ultimo mes formulas ----------
     DateTime monthBeforeStartDay = thisMonthFirstDay.subtract(Duration(days: thisMonthFirstDay.weekday)).add(new Duration(hours: 1));
@@ -364,7 +414,7 @@ class CalendarioAssembled extends StatelessWidget {
     for (var e = 1; e <= numeroDeColunas; e++) {
       lines = <Widget>[];
       for (var i = 0; i < 7; i++) {
-        if ((e == 1 && i < monthBeforeAmountDays) || (e >= numeroDeColunas && contadorNumeroDoMesAtual >= amountOfDaysThisMonth)) {
+        if ((e == 1 && i < monthBeforeAmountDays) || (e >= numeroDeColunas && contadorNumeroDoMesAtual > amountOfDaysThisMonth)) {
           if (e == 1) {
             // numeroParaMostrar = firstdayFormatedint.toString();
             //
@@ -384,10 +434,9 @@ class CalendarioAssembled extends StatelessWidget {
           contadorNumeroDoMesAtual++;
           cor = Colors.greenAccent;
           font = FontWeight.w400;
-          //
-          if (arr1.contains(contadorNumeroDoMesAtual - 1)) {
-            var possition = arr1.indexOf(contadorNumeroDoMesAtual - 1);
-            var type = arr2[possition];
+          if (arrayselectedMonthDias.contains(contadorNumeroDoMesAtual - 1)) {
+            var posicao = arrayselectedMonthDias.indexOf(contadorNumeroDoMesAtual - 1);
+            var type = arrayselectedMonthTypo[posicao];
             List received = mesSelect(type);
             cor = received[0];
             colorCont = received[1];
@@ -434,206 +483,29 @@ class CalendarioAssembled extends StatelessWidget {
       ],
     );
   }
-
-  diaButton(BuildContext context, {Color colorCont, Color cor, FontWeight font, String numeroParaMostrar, EdgeInsets small}) {
-    var localsmall = small;
-    var localcolorCont = colorCont;
-    var localnumeroParaMostrar = numeroParaMostrar;
-    var localfont = font;
-    var localCor = cor;
-
-    // var horas = "";
-    // var minutos = "";
-    // var data = "";
-    // var datasend = "";
-    // void horasTimePicker() async {
-    //   DatePicker.showTimePicker(
-    //     context,
-    //     showSecondsColumn: false,
-    //     theme: DatePickerTheme(containerHeight: 210.0),
-    //     showTitleActions: true,
-    //     onConfirm: (time) {
-    //       horas = "";
-    //       minutos = "";
-    //       data = "";
-    //       datasend = "";
-    //       if (int.parse('${time.hour}') < 10) {
-    //         horas = '0${time.hour}';
-    //       } else {
-    //         horas = '${time.hour}';
-    //       }
-    //       if (int.parse('${time.minute}') < 10) {
-    //         minutos = '0${time.minute}';
-    //       } else {
-    //         minutos = '${time.minute}';
-    //       }
-    //       data = horas + " : " + minutos;
-    //       datasend = horas + ":" + minutos;
-    //       //
-    //       DatePicker.showTimePicker(
-    //         context,
-    //         showSecondsColumn: false,
-    //         theme: DatePickerTheme(
-    //           containerHeight: 210.0,
-    //         ),
-    //         showTitleActions: true,
-    //         onConfirm: (time) {
-    //           if (int.parse('${time.hour}') < 10) {
-    //             horas = '0${time.hour}';
-    //           } else {
-    //             horas = '${time.hour}';
-    //           }
-    //           if (int.parse('${time.minute}') < 10) {
-    //             minutos = '0${time.minute}';
-    //           } else {
-    //             minutos = '${time.minute}';
-    //           }
-    //           data = data + "  -  " + horas + " : " + minutos;
-    //           datasend = datasend + "-" + horas + ":" + minutos;
-    //           List datalist = [];
-    //           List datasendlist = [];
-    //           List lista = [];
-    //           bool run = false;
-    //           if (MarcacaoVariables.arraymarcacao.isNotEmpty) {
-    //             MarcacaoVariables.arraymarcacao.forEach((listElement) {
-    //               if (run == false) {
-    //                 if (listElement[0] == MarcacaoVariables.ano &&
-    //                     listElement[1] == MarcacaoVariables.mes &&
-    //                     listElement[2] == int.parse(localnumeroParaMostrar)) {
-    //                   var index = MarcacaoVariables.arraymarcacao.indexOf(listElement);
-    //                   MarcacaoVariables.arraymarcacao[index][3].add(data);
-    //                   MarcacaoVariables.arraymarcacao[index][4].add(datasend);
-    //                   run = !run;
-    //                   Navigator.pushReplacementNamed(context, '/marcar_consulta');
-    //                 }
-    //               }
-    //             });
-    //             if (run == false) {
-    //               lista.add(MarcacaoVariables.ano);
-    //               lista.add(MarcacaoVariables.mes);
-    //               lista.add(int.parse(localnumeroParaMostrar));
-    //               datalist.add(data);
-    //               datasendlist.add(datasend);
-    //               lista.add(datalist);
-    //               lista.add(datasendlist);
-    //               MarcacaoVariables.arraymarcacao.add(lista);
-    //               run = !run;
-    //               Navigator.pushReplacementNamed(context, '/marcar_consulta');
-    //             }
-    //           } else {
-    //             lista.add(MarcacaoVariables.ano);
-    //             lista.add(MarcacaoVariables.mes);
-    //             lista.add(int.parse(localnumeroParaMostrar));
-    //             datalist.add(data);
-    //             datasendlist.add(datasend);
-    //             lista.add(datalist);
-    //             lista.add(datasendlist);
-    //             MarcacaoVariables.arraymarcacao.add(lista);
-    //             Navigator.pushReplacementNamed(context, '/marcar_consulta');
-    //           }
-    //           Navigator.pushReplacementNamed(context, '/marcar_consulta');
-    //         },
-    //         currentTime: DateTime.now(),
-    //         locale: LocaleType.pt,
-    //       );
-    //       //
-    //     },
-    //     currentTime: DateTime.now(),
-    //     locale: LocaleType.pt,
-    //   );
-    // }
-
-    MarcacaoVariables.arraymarcacao.forEach((listElement) {
-      if (listElement[0] == MarcacaoVariables.ano &&
-          listElement[1] == MarcacaoVariables.mes &&
-          listElement[2] == int.parse(localnumeroParaMostrar) &&
-          localCor == Color.fromRGBO(246, 146, 32, 1)) {
-        localCor = Colors.white;
-        localcolorCont = Color.fromRGBO(183, 67, 52, 1);
-      }
-    });
-
-    return GestureDetector(
-      onTap: () {
-        dialogDia(context);
-      },
-      child: Container(
-        alignment: Alignment.center,
-        margin: localsmall,
-        decoration: BoxDecoration(
-          color: localcolorCont,
-          borderRadius: const BorderRadius.all(
-            const Radius.circular(25.0),
-          ),
-        ),
-        height: 28,
-        width: 28,
-        child: Text(
-          localnumeroParaMostrar,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.montserrat(
-            textStyle: TextStyle(
-              fontWeight: localfont,
-              color: localCor,
-              fontSize: 14,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future dialogDia(BuildContext context) {
-    return showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Aviso (WIP)"),
-          content: Text("Qualquer mensagem pode aparecer aqui, qualquer coisa pode ser feita a clicar no dia"),
-          actions: [
-            TextButton(
-              child: Text("Ok"),
-              onPressed: () async {
-                Navigator.of(context).pop();
-              },
-            )
-          ],
-        );
-      },
-    );
-  }
 }
 
 // ------------------------
-Future<ConsultorioList> fetchAlbum() async {
-  throw Exception('Sem Net');
-}
-
-Future<EspecialidadesList> fetchEspecialidades() async {
-  throw Exception('Sem Net');
-}
-
-showBrevementeDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: RichText(
-          text: TextSpan(
-            style: GoogleFonts.montserrat(textStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.black)),
-            children: <TextSpan>[TextSpan(text: 'Selecionar pelo menos 1 dia!', style: TextStyle(fontSize: 15))],
-          ),
-        ),
-        actions: [
-          TextButton(
-            child: Text("Ok"),
-            onPressed: () async {
-              Navigator.of(context).pop();
-            },
-          )
-        ],
-      );
-    },
-  );
-}
+// showBrevementeDialog(BuildContext context) {
+//   showDialog(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return AlertDialog(
+//         title: RichText(
+//           text: TextSpan(
+//             style: GoogleFonts.montserrat(textStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.black)),
+//             children: <TextSpan>[TextSpan(text: 'Selecionar pelo menos 1 dia!', style: TextStyle(fontSize: 15))],
+//           ),
+//         ),
+//         actions: [
+//           TextButton(
+//             child: Text("Ok"),
+//             onPressed: () async {
+//               Navigator.of(context).pop();
+//             },
+//           )
+//         ],
+//       );
+//     },
+//   );
+// }
