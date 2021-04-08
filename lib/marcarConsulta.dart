@@ -27,7 +27,7 @@ class MarcarConsulta extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                GreenTODO(),
+                CompleteCalendar(),
               ],
             ),
           ),
@@ -38,14 +38,13 @@ class MarcarConsulta extends StatelessWidget {
 }
 
 // ------------------------
-class GreenTODO extends StatefulWidget {
+class CompleteCalendar extends StatefulWidget {
   @override
-  _GreenTODOState createState() => _GreenTODOState();
+  _CompleteCalendarState createState() => _CompleteCalendarState();
 }
 
-class _GreenTODOState extends State<GreenTODO> {
+class _CompleteCalendarState extends State<CompleteCalendar> {
   List<Widget> grupoDeMeses = <Widget>[];
-  Container mesList = Container();
   int dia = 1;
   int mes;
 
@@ -63,6 +62,38 @@ class _GreenTODOState extends State<GreenTODO> {
       selectedYear = ano;
     });
   }
+
+  //WIP: Controller Meses
+  void goController(int distance) {
+    setState(() {
+      _controller.jumpTo(89 + 90.0);
+      // 89
+      // 90
+      // 101
+      // 95
+      // 107
+      // 130
+      // 118
+      // 135
+      // 134
+      // 109
+      // 124
+      // 100
+
+      // _controller.animateTo(_controller.position.minScrollExtent, duration: Duration(seconds: 1), curve: Curves.ease);
+    });
+  }
+
+  ScrollController _controller;
+  @override
+  void initState() {
+    super.initState();
+    _controller = ScrollController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.animateTo(_controller.position.minScrollExtent, duration: Duration(seconds: 1), curve: Curves.ease);
+    });
+  }
+  //
 
   // funções Do Seletor de meses
   void mesDysplayName(mes) {
@@ -130,18 +161,7 @@ class _GreenTODOState extends State<GreenTODO> {
     }
   }
 
-  bool seletorDeMes(dia, mes, ano) {
-    switch ((dia == MarcacaoVariables.dia && mes == MarcacaoVariables.mes && ano == MarcacaoVariables.ano) || mes == 4) {
-      case true:
-        return true;
-        break;
-      default:
-        return false;
-        break;
-    }
-  }
-
-  // funções Do Calendario
+  // funções Do calendarDayButtonGroup
   int numberOfWeeks(monthBeforeAmountDays, amountOfDaysThisMonth) {
     return monthBeforeAmountDays + amountOfDaysThisMonth <= 35 ? 5 : 6;
   }
@@ -187,8 +207,17 @@ class _GreenTODOState extends State<GreenTODO> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              mesList2(),
-              calendario(),
+              mesList(),
+              calendarDayButtonGroup(),
+              Container(
+                color: Colors.redAccent,
+                child: Column(
+                  children: [
+                    Text('Mes selecionado: $selectedMonth'),
+                    Text('Ano selecionado: $selectedYear'),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -196,42 +225,10 @@ class _GreenTODOState extends State<GreenTODO> {
     );
   }
 
-  Widget mesList2() {
-    Container listaMeses;
-
-    for (var mesesParaMostrar = 0; mesesParaMostrar <= 12; mesesParaMostrar++) {
-      mesDysplayName(mes);
-      grupoDeMeses.add(mesButton(
-        context,
-        dia: dia,
-        mes: mes,
-        ano: ano,
-        mesDysplay: mesDysplay,
-      ));
-
-      if (mes == 12) {
-        mes = 1;
-        ano++;
-      } else {
-        mes++;
-      }
-
-      if (mesesParaMostrar == 12) {
-        listaMeses = Container(
-          padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-          color: Colors.deepPurpleAccent,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(children: grupoDeMeses),
-          ),
-        );
-      }
-    }
-    return listaMeses;
-  }
-
-  // select de meses WIP
-  Widget mesButton(BuildContext context, {int dia, int mes, int ano, String mesDysplay}) {
+  //////////////////////////////////////////////////////////////////
+  //WIP: fully build Month Array
+  Widget calendarMonthButton(BuildContext context, {int dia, int mes, int ano}) {
+    mesDysplayName(mes);
     if (mes == selectedMonth && ano == selectedYear) {
       return Container(
         decoration: BoxDecoration(
@@ -255,10 +252,12 @@ class _GreenTODOState extends State<GreenTODO> {
     } else {
       return GestureDetector(
         onTap: () {
-          MarcacaoVariables.dia = dia;
-          MarcacaoVariables.mes = mes;
-          MarcacaoVariables.ano = ano;
+          // MarcacaoVariables.dia = dia;
+          // MarcacaoVariables.mes = mes;
+          // MarcacaoVariables.ano = ano;
           selected(mes, ano);
+          var distance = 100;
+          goController(distance);
         },
         child: Container(
           decoration: BoxDecoration(
@@ -283,72 +282,39 @@ class _GreenTODOState extends State<GreenTODO> {
     }
   }
 
-  // select dia WIP
-  Widget diaButton(BuildContext context, {Color colorCont, Color cor, FontWeight font, String numeroParaMostrar, EdgeInsets small}) {
-    MarcacaoVariables.arraymarcacao.forEach((listElement) {
-      if (listElement[0] == MarcacaoVariables.ano &&
-          listElement[1] == MarcacaoVariables.mes &&
-          listElement[2] == int.parse(numeroParaMostrar) &&
-          cor == Color.fromRGBO(246, 146, 32, 1)) {
-        cor = Colors.white;
-        colorCont = Color.fromRGBO(183, 67, 52, 1);
+  //WIP: lista de meses para o "calendarMonthButton"+
+  Widget mesList() {
+    Container listaMeses;
+
+    for (var mesesParaMostrar = 0; mesesParaMostrar <= 12; mesesParaMostrar++) {
+      grupoDeMeses.add(calendarMonthButton(context, dia: dia, mes: mes, ano: ano));
+
+      if (mes == 12) {
+        mes = 1;
+        ano++;
+      } else {
+        mes++;
       }
-    });
 
-    return GestureDetector(
-      onTap: () {
-        dialogDia(context, numeroParaMostrar);
-      },
-      child: Container(
-        alignment: Alignment.center,
-        margin: small,
-        decoration: BoxDecoration(
-          color: colorCont,
-          borderRadius: const BorderRadius.all(
-            const Radius.circular(25.0),
+      if (mesesParaMostrar == 12) {
+        listaMeses = Container(
+          padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+          color: Colors.deepPurpleAccent,
+          child: SingleChildScrollView(
+            controller: _controller,
+            scrollDirection: Axis.horizontal,
+            child: Row(children: grupoDeMeses),
           ),
-        ),
-        height: 28,
-        width: 28,
-        child: Text(
-          numeroParaMostrar,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.montserrat(
-            textStyle: TextStyle(
-              fontWeight: font,
-              color: cor,
-              fontSize: 14,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // dialog of day selected WIP
-  Future dialogDia(BuildContext context, String numeroParaMostrar) {
-    return showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Aviso (WIP)"),
-          content: Text("Qualquer mensagem pode aparecer aqui, qualquer coisa pode ser feita a clicar no dia" + numeroParaMostrar),
-          actions: [
-            TextButton(
-              child: Text("Ok"),
-              onPressed: () async {
-                Navigator.of(context).pop();
-              },
-            )
-          ],
         );
-      },
-    );
+      }
+    }
+
+    return listaMeses;
   }
 
-  // Calendario fully build WIP
-  Widget calendario() {
+  //////////////////////////////////////////////////////////////////
+  //WIP: fully build Day Array
+  Widget calendarDayButtonGroup() {
     List<String> arrayDiasSemana = ["D", "S", "T", "Q", "Q", "S", "S"];
 
     List<Widget> linhaDiasSemana = <Widget>[];
@@ -416,11 +382,8 @@ class _GreenTODOState extends State<GreenTODO> {
       for (var i = 0; i < 7; i++) {
         if ((e == 1 && i < monthBeforeAmountDays) || (e >= numeroDeColunas && contadorNumeroDoMesAtual > amountOfDaysThisMonth)) {
           if (e == 1) {
-            // numeroParaMostrar = firstdayFormatedint.toString();
-            //
             numeroParaMostrar = contadorDiasMesAnterior.toString();
             contadorDiasMesAnterior++;
-            //
             cor = Colors.black;
             font = FontWeight.w400;
           } else {
@@ -445,14 +408,7 @@ class _GreenTODOState extends State<GreenTODO> {
           }
         }
 
-        lines.add(diaButton(
-          context,
-          colorCont: colorCont,
-          cor: cor,
-          font: font,
-          numeroParaMostrar: numeroParaMostrar,
-          small: small,
-        ));
+        lines.add(calendarDayButton(context, colorCont: colorCont, cor: cor, font: font, numeroParaMostrar: numeroParaMostrar, small: small));
       }
 
       rowgroup.add(Row(
@@ -464,48 +420,84 @@ class _GreenTODOState extends State<GreenTODO> {
       children: <Widget>[
         Padding(
           padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: const BorderRadius.all(const Radius.circular(23.0)),
-            ),
-            width: double.infinity,
-            child: Column(
-              children: <Widget>[
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: rowgroup,
-                ),
-              ],
+          child: GestureDetector(
+            onHorizontalDragEnd: (DragEndDetails details) {
+              if (details.primaryVelocity > 0) {
+                //FIX: month is 1 change year - 1 and set month 12
+                selected(selectedMonth - 1, selectedYear);
+              } else if (details.primaryVelocity < 0) {
+                //FIX: month is 12 change year + 1 and set month 1
+                selected(selectedMonth + 1, selectedYear);
+              }
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: const BorderRadius.all(const Radius.circular(23.0)),
+              ),
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: rowgroup,
+              ),
             ),
           ),
         ),
       ],
     );
   }
-}
 
-// ------------------------
-// showBrevementeDialog(BuildContext context) {
-//   showDialog(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return AlertDialog(
-//         title: RichText(
-//           text: TextSpan(
-//             style: GoogleFonts.montserrat(textStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.black)),
-//             children: <TextSpan>[TextSpan(text: 'Selecionar pelo menos 1 dia!', style: TextStyle(fontSize: 15))],
-//           ),
-//         ),
-//         actions: [
-//           TextButton(
-//             child: Text("Ok"),
-//             onPressed: () async {
-//               Navigator.of(context).pop();
-//             },
-//           )
-//         ],
-//       );
-//     },
-//   );
-// }
+  //WIP: Button of "calendarDayButtonGroup"
+  Widget calendarDayButton(BuildContext context, {Color colorCont, Color cor, FontWeight font, String numeroParaMostrar, EdgeInsets small}) {
+    return GestureDetector(
+      onTap: () {
+        calendarDayButtonDialog(context, numeroParaMostrar);
+      },
+      child: Container(
+        alignment: Alignment.center,
+        margin: small,
+        decoration: BoxDecoration(
+          color: colorCont,
+          borderRadius: const BorderRadius.all(
+            const Radius.circular(25.0),
+          ),
+        ),
+        height: 28,
+        width: 28,
+        child: Text(
+          numeroParaMostrar,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.montserrat(
+            textStyle: TextStyle(
+              fontWeight: font,
+              color: cor,
+              fontSize: 14,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  //WIP: Dialog of "calendarDayButton"
+  Future calendarDayButtonDialog(BuildContext context, String numeroParaMostrar) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Aviso (WIP)"),
+          content: Text("Qualquer mensagem pode aparecer aqui, qualquer coisa pode ser feita a clicar no dia" + numeroParaMostrar),
+          actions: [
+            TextButton(
+              child: Text("Ok"),
+              onPressed: () async {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+}
