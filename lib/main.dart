@@ -14,11 +14,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([]);
     return MaterialApp(
+      //Debug features
+      showPerformanceOverlay: false,
+      debugShowCheckedModeBanner: false,
+      //
+      darkTheme: ThemeData.dark(),
+      theme: ThemeData(primarySwatch: Colors.pink),
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Test'),
+      home: MyHomePage(title: 'General Widget Develop'),
       routes: {
         '/marcarConsulta': (context) => MarcarConsulta(),
       },
@@ -35,35 +38,19 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   @override
   Widget build(BuildContext context) {
     Common.width = MediaQuery.of(context).size.width;
     Common.height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
+      body: Center(),
+
+      //old stuff
       floatingActionButton: FloatingActionButton(
-        // onPressed: _incrementCounter,
         onPressed: () {
           Navigator.pushNamed(context, "/marcarConsulta");
         },
-        tooltip: 'Increment',
         child: Icon(Icons.add),
       ),
     );

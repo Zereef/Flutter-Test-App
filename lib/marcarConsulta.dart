@@ -22,7 +22,7 @@ class MarcarConsulta extends StatelessWidget {
             height: Common.height,
             padding: EdgeInsets.all(0.0),
             decoration: BoxDecoration(
-              color: Colors.blueGrey,
+              color: Colors.black12,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -299,7 +299,7 @@ class _CompleteCalendarState extends State<CompleteCalendar> {
       if (mesesParaMostrar == 12) {
         listaMeses = Container(
           padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-          color: Colors.deepPurpleAccent,
+          color: Colors.transparent,
           child: SingleChildScrollView(
             controller: _controller,
             scrollDirection: Axis.horizontal,
@@ -487,7 +487,8 @@ class _CompleteCalendarState extends State<CompleteCalendar> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Aviso (WIP)"),
-          content: Text("Qualquer mensagem pode aparecer aqui, qualquer coisa pode ser feita a clicar no dia" + numeroParaMostrar),
+          content:
+              Text('Qualquer mensagem pode aparecer aqui, qualquer coisa pode ser feita a clicar no dia: $numeroParaMostrar, $selectedMonth, $selectedYear'),
           actions: [
             TextButton(
               child: Text("Ok"),
