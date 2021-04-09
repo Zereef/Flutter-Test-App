@@ -10,7 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 //costum import
 import 'package:test_app/runtime_variables.dart';
 
-class MarcarConsulta extends StatelessWidget {
+class Calendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
