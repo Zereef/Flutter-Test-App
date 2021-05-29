@@ -21,4 +21,8 @@ class CurrentTheme with ChangeNotifier {
     box.put('currentTheme', _isDark);
     notifyListeners();
   }
+
+  bool mode() {
+    return _isDark;
+  }
 }

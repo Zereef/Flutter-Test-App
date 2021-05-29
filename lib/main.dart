@@ -11,17 +11,17 @@ import 'package:test_app/Theme/CurrentTheme.dart';
 Future<void> main() async {
   await Hive.initFlutter();
   box = await Hive.openBox('easyTheme');
-  runApp(MyApp());
+  runApp(App());
 }
 
 CurrentTheme currentTheme = CurrentTheme();
 
-class MyApp extends StatefulWidget {
+class App extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _AppState createState() => _AppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
@@ -37,12 +37,12 @@ class _MyAppState extends State<MyApp> {
       //Debug features
       showPerformanceOverlay: false,
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: ThemeData.dark(),
+      theme: AppTheme.light2,
+      darkTheme: AppTheme.dark2,
       themeMode: currentTheme.currentTheme(),
       title: 'Flutter Demo',
       routes: {
-        '/marcarConsulta': (context) => MarcarConsulta(),
+        '/Calendar': (context) => Calendar(),
       },
       home: Main(),
     );
@@ -50,9 +50,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 class Main extends StatefulWidget {
-  const Main({
-    Key key,
-  }) : super(key: key);
+  const Main({Key key}) : super(key: key);
 
   @override
   _MainState createState() => _MainState();
@@ -67,26 +65,20 @@ class _MainState extends State<Main> {
       appBar: AppBar(
         title: Text("General Widget Develop"),
         actions: [
-          TextButton(
-            child: Text(currentTheme.currentTheme() == ThemeMode.dark ? "Dark" : "Light"),
-            onPressed: () => currentTheme.switchTheme(),
-          ),
+          Switch(
+            value: currentTheme.mode(),
+            onChanged: (value) {
+              currentTheme.switchTheme();
+            },
+          )
         ],
       ),
       body: Center(
-        child: TextButton(
-          child: Text("Foo"),
-          onPressed: () => Navigator.pushNamed(context, "/marcarConsulta"),
+        child: ElevatedButton(
+          onPressed: () => Navigator.pushNamed(context, "/Calendar"),
+          child: Text("Calendar"),
         ),
       ),
-
-      //old stuff
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     currentTheme.switchTheme();
-      //   },
-      //   child: Icon(Icons.add),
-      // ),
     );
   }
 }
