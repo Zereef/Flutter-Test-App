@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'CalendarV2.dart';
 import 'Theme/config.dart';
-import 'marcarConsulta.dart';
+import 'CalendarV1.dart';
 
 import 'package:test_app/runtime_variables.dart';
 import 'package:test_app/Theme/ThemeData.dart';
@@ -43,6 +44,7 @@ class _AppState extends State<App> {
       title: 'Flutter Demo',
       routes: {
         '/Calendar': (context) => Calendar(),
+        '/Calendar2': (context) => Calendar2(),
       },
       home: Main(),
     );
@@ -74,9 +76,17 @@ class _MainState extends State<Main> {
         ],
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () => Navigator.pushNamed(context, "/Calendar"),
-          child: Text("Calendar"),
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, "/Calendar"),
+              child: Text("Calendar"),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, "/Calendar2"),
+              child: Text("Calendar"),
+            ),
+          ],
         ),
       ),
     );
