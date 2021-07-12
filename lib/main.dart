@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'CalendarV2.dart';
+import 'Pages/CalendarV2.dart';
 import 'Theme/config.dart';
-import 'CalendarV1.dart';
+import 'Pages/CalendarV1.dart';
 
-import 'package:test_app/runtime_variables.dart';
+import 'package:test_app/Components/runtime_variables.dart';
 import 'package:test_app/Theme/ThemeData.dart';
 import 'package:test_app/Theme/CurrentTheme.dart';
 

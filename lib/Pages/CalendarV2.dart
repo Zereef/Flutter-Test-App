@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 //costum import
-import 'package:test_app/runtime_variables.dart';
+import 'package:test_app/Components/runtime_variables.dart';
 
-import 'Components/Calendar/DayButtonGroup.dart';
-import 'Components/Calendar/MonthButton.dart';
+import '../Components/Calendar/DayButtonGroup.dart';
+import '../Components/Calendar/MonthButton.dart';
 
 class Calendar2 extends StatelessWidget {
   @override

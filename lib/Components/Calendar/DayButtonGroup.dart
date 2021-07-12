@@ -109,8 +109,9 @@ class CalendarDayButtonGroup extends StatelessWidget {
     int contadorNumeroDoMesAtual = 1;
     int contadorDiasMesAnterior = int.tryParse(firstdayFormated);
     int numeroDeColunas = numberOfWeeks(monthBeforeAmountDays, amountOfDaysThisMonth);
+
     for (int e = 1; e <= numeroDeColunas; e++) {
-      lines = <Widget>[];
+      lines.clear();
       for (int i = 0; i < 7; i++) {
         if ((e == 1 && i < monthBeforeAmountDays) || (e >= numeroDeColunas && contadorNumeroDoMesAtual > amountOfDaysThisMonth)) {
           if (e == 1) {

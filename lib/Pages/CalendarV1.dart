@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 //costum import
-import 'package:test_app/runtime_variables.dart';
+import 'package:test_app/Components/runtime_variables.dart';
 
 class Calendar extends StatelessWidget {
   @override
