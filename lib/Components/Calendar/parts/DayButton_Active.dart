@@ -1,9 +1,7 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CalendarDayButton extends StatelessWidget {
+class CalendarDayActiveButton extends StatelessWidget {
   final Color colorCont;
   final Color cor;
   final FontWeight font;
@@ -14,7 +12,7 @@ class CalendarDayButton extends StatelessWidget {
   final int mesTaped;
   final int yearTaped;
 
-  const CalendarDayButton(
+  const CalendarDayActiveButton(
     this.colorCont,
     this.cor,
     this.font,
@@ -62,9 +60,7 @@ class CalendarDayButton extends StatelessWidget {
         child: Text(
           numeroParaMostrar,
           textAlign: TextAlign.center,
-          style: GoogleFonts.montserrat(
-            textStyle: TextStyle(fontWeight: font, color: cor, fontSize: 14),
-          ),
+          style: GoogleFonts.montserrat(textStyle: TextStyle(fontWeight: font, color: cor, fontSize: 14)),
         ),
       ),
     );

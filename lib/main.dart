@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'Pages/CalendarV2.dart';
+
 import 'Theme/config.dart';
+
 import 'Pages/CalendarV1.dart';
+import 'Pages/CalendarV2.dart';
+import 'Pages/DiscordCloneV1.dart';
 
 import 'package:test_app/Components/runtime_variables.dart';
 import 'package:test_app/Theme/ThemeData.dart';
@@ -12,6 +16,7 @@ import 'package:test_app/Theme/CurrentTheme.dart';
 Future<void> main() async {
   await Hive.initFlutter();
   box = await Hive.openBox('easyTheme');
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   runApp(App());
 }
 
@@ -35,7 +40,6 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      //Debug features
       showPerformanceOverlay: false,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light2,
@@ -43,8 +47,10 @@ class _AppState extends State<App> {
       themeMode: currentTheme.currentTheme(),
       title: 'Flutter Demo',
       routes: {
-        '/Calendar': (context) => Calendar(),
-        '/Calendar2': (context) => Calendar2(),
+        '/CalendarV1': (context) => CalendarShow(),
+        '/CalendarV2': (context) => CalendarShow2(),
+        '/DiscordCloneV1': (context) => DiscordCloneV1(),
+        //
       },
       home: Main(),
     );
@@ -77,14 +83,20 @@ class _MainState extends State<Main> {
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, "/Calendar"),
-              child: Text("Calendar"),
+              onPressed: () => Navigator.pushNamed(context, "/CalendarV1"),
+              child: Text("Calendar V1", style: TextStyle(fontSize: 30)),
             ),
             ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, "/Calendar2"),
-              child: Text("Calendar"),
+              onPressed: () => Navigator.pushNamed(context, "/CalendarV2"),
+              child: Text("Calendar V2", style: TextStyle(fontSize: 30)),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, "/DiscordCloneV1"),
+              child: Text("Discord App Clone", style: TextStyle(fontSize: 30)),
             ),
           ],
         ),

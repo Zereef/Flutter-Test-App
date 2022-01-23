@@ -1,6 +1,5 @@
 //main dart and flutter imports
 import 'package:flutter/material.dart';
-import 'dart:ui';
 
 //packages
 import 'package:intl/intl.dart';
@@ -10,7 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 //costum import
 import 'package:test_app/Components/runtime_variables.dart';
 
-class Calendar extends StatelessWidget {
+class CalendarShow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,7 +62,6 @@ class _CompleteCalendarState extends State<CompleteCalendar> {
     });
   }
 
-  //WIP: Controller Meses
   void goController(int distance) {
     setState(() {
       _controller.jumpTo(89 + 90.0);
@@ -226,7 +224,6 @@ class _CompleteCalendarState extends State<CompleteCalendar> {
   }
 
   //////////////////////////////////////////////////////////////////
-  //WIP: fully build Month Array
   Widget calendarMonthButton(BuildContext context, {int dia, int mes, int ano}) {
     mesDysplayName(mes);
     if (mes == selectedMonth && ano == selectedYear) {
@@ -282,7 +279,6 @@ class _CompleteCalendarState extends State<CompleteCalendar> {
     }
   }
 
-  //WIP: lista de meses para o "calendarMonthButton"+
   Widget mesList() {
     Container listaMeses;
 
@@ -313,7 +309,6 @@ class _CompleteCalendarState extends State<CompleteCalendar> {
   }
 
   //////////////////////////////////////////////////////////////////
-  //WIP: fully build Day Array
   Widget calendarDayButtonGroup() {
     List<String> arrayDiasSemana = ["D", "S", "T", "Q", "Q", "S", "S"];
 
@@ -334,11 +329,13 @@ class _CompleteCalendarState extends State<CompleteCalendar> {
     // DateTime now = DateTime.now();
 
     // ---------- obter primeiro dia e ultimo dia do mes selecionado ----------
-    DateTime thisMonthFirstDay = new DateTime(selectedYear, selectedMonth, 1, 0, 0, 0, 0); //obter primeiro dia do mes ATUAL
+    DateTime thisMonthFirstDay =
+        new DateTime(selectedYear, selectedMonth, 1, 0, 0, 0, 0); //obter primeiro dia do mes ATUAL
     DateTime lastday = new DateTime(selectedYear, selectedMonth + 1, 0, 0, 0, 0, 0); //obter ultimo dia do mes ATUAL
 
     // ---------- obter primeiro dia do ultimo mes formulas ----------
-    DateTime monthBeforeStartDay = thisMonthFirstDay.subtract(Duration(days: thisMonthFirstDay.weekday)).add(new Duration(hours: 1));
+    DateTime monthBeforeStartDay =
+        thisMonthFirstDay.subtract(Duration(days: thisMonthFirstDay.weekday)).add(new Duration(hours: 1));
     int monthBeforeAmountDays = thisMonthFirstDay.difference(monthBeforeStartDay).inDays + 1;
     String firstdayFormated = DateFormat.d().format(monthBeforeStartDay);
 
@@ -380,7 +377,8 @@ class _CompleteCalendarState extends State<CompleteCalendar> {
     for (var e = 1; e <= numeroDeColunas; e++) {
       lines = <Widget>[];
       for (var i = 0; i < 7; i++) {
-        if ((e == 1 && i < monthBeforeAmountDays) || (e >= numeroDeColunas && contadorNumeroDoMesAtual > amountOfDaysThisMonth)) {
+        if ((e == 1 && i < monthBeforeAmountDays) ||
+            (e >= numeroDeColunas && contadorNumeroDoMesAtual > amountOfDaysThisMonth)) {
           if (e == 1) {
             numeroParaMostrar = contadorDiasMesAnterior.toString();
             contadorDiasMesAnterior++;
@@ -408,7 +406,8 @@ class _CompleteCalendarState extends State<CompleteCalendar> {
           }
         }
 
-        lines.add(calendarDayButton(context, colorCont: colorCont, cor: cor, font: font, numeroParaMostrar: numeroParaMostrar, small: small));
+        lines.add(calendarDayButton(context,
+            colorCont: colorCont, cor: cor, font: font, numeroParaMostrar: numeroParaMostrar, small: small));
       }
 
       rowgroup.add(Row(
@@ -423,10 +422,8 @@ class _CompleteCalendarState extends State<CompleteCalendar> {
           child: GestureDetector(
             onHorizontalDragEnd: (DragEndDetails details) {
               if (details.primaryVelocity > 0) {
-                //FIX: month is 1 change year - 1 and set month 12
                 selected(selectedMonth - 1, selectedYear);
               } else if (details.primaryVelocity < 0) {
-                //FIX: month is 12 change year + 1 and set month 1
                 selected(selectedMonth + 1, selectedYear);
               }
             },
@@ -447,8 +444,8 @@ class _CompleteCalendarState extends State<CompleteCalendar> {
     );
   }
 
-  //WIP: Button of "calendarDayButtonGroup"
-  Widget calendarDayButton(BuildContext context, {Color colorCont, Color cor, FontWeight font, String numeroParaMostrar, EdgeInsets small}) {
+  Widget calendarDayButton(BuildContext context,
+      {Color colorCont, Color cor, FontWeight font, String numeroParaMostrar, EdgeInsets small}) {
     return GestureDetector(
       onTap: () {
         calendarDayButtonDialog(context, numeroParaMostrar);
@@ -479,7 +476,6 @@ class _CompleteCalendarState extends State<CompleteCalendar> {
     );
   }
 
-  //WIP: Dialog of "calendarDayButton"
   Future calendarDayButtonDialog(BuildContext context, String numeroParaMostrar) {
     return showDialog(
       context: context,
@@ -487,8 +483,8 @@ class _CompleteCalendarState extends State<CompleteCalendar> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Aviso (WIP)"),
-          content:
-              Text('Qualquer mensagem pode aparecer aqui, qualquer coisa pode ser feita a clicar no dia: $numeroParaMostrar, $selectedMonth, $selectedYear'),
+          content: Text(
+              'Qualquer mensagem pode aparecer aqui, qualquer coisa pode ser feita a clicar no dia: $numeroParaMostrar, $selectedMonth, $selectedYear'),
           actions: [
             TextButton(
               child: Text("Ok"),
