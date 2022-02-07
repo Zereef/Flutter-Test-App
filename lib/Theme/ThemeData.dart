@@ -15,7 +15,6 @@ class AppTheme {
     colorScheme: ColorScheme.light(
       primary: Colors.white,
       onPrimary: Colors.white,
-      primaryVariant: Colors.white38,
       secondary: Colors.red,
     ),
     cardTheme: CardTheme(color: Colors.teal),
@@ -43,7 +42,6 @@ class AppTheme {
     colorScheme: ColorScheme.dark(
       primary: Colors.black,
       onPrimary: Colors.black,
-      primaryVariant: Colors.black,
       secondary: Colors.red,
     ),
     cardTheme: CardTheme(color: Colors.black),

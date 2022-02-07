@@ -5,12 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Flutter-Test-App",
+            "name": "Flutter_Test_App",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "Flutter-Test-App (profile mode)",
+            "name": "Flutter_Test_App (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
