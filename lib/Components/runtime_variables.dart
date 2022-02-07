@@ -1,4 +1,5 @@
 class Common {
-  static double height;
-  static double width;
+  static double height = 0;
+  static double width = 0;
+  static bool isDarkMode = false;
 }

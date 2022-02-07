@@ -18,12 +18,8 @@ class AppTheme {
       primaryVariant: Colors.white38,
       secondary: Colors.red,
     ),
-    cardTheme: CardTheme(
-      color: Colors.teal,
-    ),
-    iconTheme: IconThemeData(
-      color: Colors.white54,
-    ),
+    cardTheme: CardTheme(color: Colors.teal),
+    iconTheme: IconThemeData(color: Colors.white54),
     textTheme: TextTheme(
       headline1: TextStyle(
         color: Colors.green,
@@ -44,18 +40,14 @@ class AppTheme {
         color: Colors.white,
       ),
     ),
-    colorScheme: ColorScheme.light(
+    colorScheme: ColorScheme.dark(
       primary: Colors.black,
       onPrimary: Colors.black,
       primaryVariant: Colors.black,
       secondary: Colors.red,
     ),
-    cardTheme: CardTheme(
-      color: Colors.black,
-    ),
-    iconTheme: IconThemeData(
-      color: Colors.white54,
-    ),
+    cardTheme: CardTheme(color: Colors.black),
+    iconTheme: IconThemeData(color: Colors.white54),
     textTheme: TextTheme(
       headline1: TextStyle(
         color: Colors.green,

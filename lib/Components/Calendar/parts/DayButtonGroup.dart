@@ -5,8 +5,8 @@ import 'DayButton_Active.dart';
 import 'DayButton_Inactive.dart';
 
 List mesSelect(type) {
-  Color colorCont;
-  Color cor;
+  Color colorCont = Color.fromRGBO(0, 0, 0, 0);
+  Color cor = Color.fromRGBO(0, 0, 0, 0);
   switch (type) {
     case 1: //teleconsulta
       {
@@ -89,7 +89,7 @@ class _CalendarDayButtonGroupState extends State<CalendarDayButtonGroup> {
 
     //MES ANTERIOR FORMULAS
     DateTime monthBeforeStartDay = thisMonthFirstDay.subtract(Duration(days: thisMonthFirstDay.weekday)).add(new Duration(hours: 1)); // primeiro dia da semana a mostrar
-    int firstdayFormated = int.tryParse(DateFormat.d().format(monthBeforeStartDay)); //primeiro dia que aparece no calendario
+    int firstdayFormated = int.tryParse(DateFormat.d().format(monthBeforeStartDay))!; //primeiro dia que aparece no calendario
     int monthBeforeAmountDays = thisMonthFirstDay.difference(monthBeforeStartDay).inDays + 1; //calcula quantos dias vão aparecer do mes anterior
     monthBeforeAmountDays == 7 ? monthBeforeAmountDays = 0 : monthBeforeAmountDays = monthBeforeAmountDays; //numero de dias antes n pode ser mais do que 7
 
@@ -148,9 +148,9 @@ class _CalendarDayButtonGroupState extends State<CalendarDayButtonGroup> {
 
     return GestureDetector(
       onHorizontalDragEnd: (DragEndDetails details) {
-        if (details.primaryVelocity > 0) {
+        if (details.primaryVelocity! > 0) {
           widget.notifyParent(widget.selectedMonth, widget.selectedYear, "+"); //goes back a month
-        } else if (details.primaryVelocity < 0) {
+        } else if (details.primaryVelocity! < 0) {
           widget.notifyParent(widget.selectedMonth, widget.selectedYear, "-"); //goes foward a month
         }
       },

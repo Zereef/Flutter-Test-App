@@ -1,28 +1,28 @@
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 
-import 'config.dart';
+// import 'config.dart';
 
-class CurrentTheme with ChangeNotifier {
-  static bool _isDark = true;
+// class CurrentTheme with ChangeNotifier {
+//   static bool _isDark = true;
 
-  CurrentTheme() {
-    if (box.containsKey('currentTheme'))
-      _isDark = box.get('currentTheme');
-    else
-      box.put('currentTheme', _isDark);
-  }
+//   CurrentTheme() {
+//     if (box.containsKey('currentTheme'))
+//       _isDark = box.get('currentTheme');
+//     else
+//       box.put('currentTheme', _isDark);
+//   }
 
-  ThemeMode currentTheme() {
-    return _isDark ? ThemeMode.dark : ThemeMode.light;
-  }
+//   ThemeMode currentTheme() {
+//     return _isDark ? ThemeMode.dark : ThemeMode.light;
+//   }
 
-  void switchTheme() {
-    _isDark = !_isDark;
-    box.put('currentTheme', _isDark);
-    notifyListeners();
-  }
+//   void switchTheme() {
+//     _isDark = !_isDark;
+//     box.put('currentTheme', _isDark);
+//     notifyListeners();
+//   }
 
-  bool mode() {
-    return _isDark;
-  }
-}
+//   bool mode() {
+//     return _isDark;
+//   }
+// }

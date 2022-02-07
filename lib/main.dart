@@ -1,26 +1,30 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'Theme/config.dart';
-
-import 'Pages/CalendarV1.dart';
 import 'Pages/CalendarV2.dart';
 import 'Pages/DiscordCloneV1.dart';
 
 import 'package:test_app/Components/runtime_variables.dart';
 import 'package:test_app/Theme/ThemeData.dart';
-import 'package:test_app/Theme/CurrentTheme.dart';
 
-Future<void> main() async {
-  await Hive.initFlutter();
-  box = await Hive.openBox('easyTheme');
+bool mode = true;
+
+void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+  // SharedPreferences prefs = await SharedPreferences.getInstance();
+  // mode = prefs.getBool('mode') ?? true;
   runApp(App());
 }
 
-CurrentTheme currentTheme = CurrentTheme();
+_updateMode() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  // mode = prefs.getBool('mode') ?? true;
+  print('$mode');
+  await prefs.setBool('mode', mode);
+}
 
 class App extends StatefulWidget {
   @override
@@ -28,37 +32,35 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  @override
-  void initState() {
-    super.initState();
-    currentTheme.addListener(() {
-      print('changes');
-      setState(() {});
+  void modeSwitcher() {
+    _updateMode();
+    setState(() {
+      mode = !mode;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    // _updateMode();
     return MaterialApp(
       showPerformanceOverlay: false,
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light2,
-      darkTheme: AppTheme.dark2,
-      themeMode: currentTheme.currentTheme(),
+      theme: mode ? AppTheme.dark2 : AppTheme.light2,
       title: 'Flutter Demo',
       routes: {
-        '/CalendarV1': (context) => CalendarShow(),
         '/CalendarV2': (context) => CalendarShow2(),
         '/DiscordCloneV1': (context) => DiscordCloneV1(),
         //
       },
-      home: Main(),
+      home: Main(modeSwitcher),
     );
   }
 }
 
 class Main extends StatefulWidget {
-  const Main({Key key}) : super(key: key);
+  final Function notifyParent;
+
+  Main(this.notifyParent);
 
   @override
   _MainState createState() => _MainState();
@@ -67,6 +69,11 @@ class Main extends StatefulWidget {
 class _MainState extends State<Main> {
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    Common.isDarkMode = brightness == Brightness.dark;
+    if (brightness == Brightness.dark) {
+      log("message");
+    }
     Common.width = MediaQuery.of(context).size.width;
     Common.height = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -74,9 +81,9 @@ class _MainState extends State<Main> {
         title: Text("General Widget Develop"),
         actions: [
           Switch(
-            value: currentTheme.mode(),
+            value: mode,
             onChanged: (value) {
-              currentTheme.switchTheme();
+              widget.notifyParent();
             },
           )
         ],
@@ -86,10 +93,6 @@ class _MainState extends State<Main> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, "/CalendarV1"),
-              child: Text("Calendar V1", style: TextStyle(fontSize: 30)),
-            ),
             ElevatedButton(
               onPressed: () => Navigator.pushNamed(context, "/CalendarV2"),
               child: Text("Calendar V2", style: TextStyle(fontSize: 30)),

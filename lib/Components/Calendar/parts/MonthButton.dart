@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 // funções Do Seletor de meses
 String mesDysplayName(mes) {
-  String mesDysplay;
+  String mesDysplay = "";
   switch (mes) {
     case 1:
       {

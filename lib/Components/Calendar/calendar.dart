@@ -11,10 +11,10 @@ class Calendar extends StatefulWidget {
 class _CalendarState extends State<Calendar> {
   DateTime now = DateTime.now();
   bool firstrun = true;
-  int mes;
-  int ano;
-  int selectedMonth; // VARIABLES FOR MONTH IN FOCUS
-  int selectedYear;
+  int mes = 1;
+  int ano = 2021;
+  int selectedMonth = 1; // VARIABLES FOR MONTH IN FOCUS
+  int selectedYear = 2021;
 
   // UPDATES THE MONTH IN FOCUS
   void updateDate(int importMonth, int importYear) {
@@ -71,8 +71,8 @@ class _CalendarState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
     if (firstrun == true) {
-      mes = int.tryParse(DateTime(now.month).toString().substring(0, 4));
-      ano = int.tryParse(DateTime(now.year).toString().substring(0, 4));
+      mes = int.tryParse(DateTime(now.month).toString().substring(0, 4))!;
+      ano = int.tryParse(DateTime(now.year).toString().substring(0, 4))!;
       updateDate(mes, ano);
       firstrun = false;
     }

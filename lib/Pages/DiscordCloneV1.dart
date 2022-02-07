@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class DiscordCloneV1 extends StatefulWidget {
-  const DiscordCloneV1({Key key}) : super(key: key);
+  const DiscordCloneV1({Key? key}) : super(key: key);
 
   @override
   _DiscordCloneV1State createState() => _DiscordCloneV1State();
