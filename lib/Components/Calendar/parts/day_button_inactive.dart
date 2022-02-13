@@ -5,10 +5,7 @@ class CalendarDayButtonInactive extends StatelessWidget {
   final String dia;
   final EdgeInsets small;
 
-  const CalendarDayButtonInactive(
-    this.dia,
-    this.small,
-  );
+  const CalendarDayButtonInactive(this.dia, this.small, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +19,7 @@ class CalendarDayButtonInactive extends StatelessWidget {
         dia,
         textAlign: TextAlign.center,
         style: GoogleFonts.montserrat(
-          textStyle: TextStyle(fontWeight: FontWeight.w600, color: Color.fromRGBO(232, 102, 0, 1), fontSize: 14),
+          textStyle: const TextStyle(fontWeight: FontWeight.w600, color: Color.fromRGBO(232, 102, 0, 1), fontSize: 14),
         ),
       ),
     );

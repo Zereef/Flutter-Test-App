@@ -76,13 +76,7 @@ class CalendarMonthButton extends StatefulWidget {
   final int selectedMonth;
   final Function notifyParent;
 
-  CalendarMonthButton(
-    this.mes,
-    this.ano,
-    this.selectedYear,
-    this.selectedMonth,
-    this.notifyParent,
-  );
+  const CalendarMonthButton(this.mes, this.ano, this.selectedYear, this.selectedMonth, this.notifyParent, {Key? key}) : super(key: key);
 
   @override
   _CalendarMonthButtonState createState() => _CalendarMonthButtonState();
@@ -95,16 +89,16 @@ class _CalendarMonthButtonState extends State<CalendarMonthButton> {
     mesDysplay = mesDysplayName(widget.mes);
     if (widget.mes == widget.selectedMonth && widget.ano == widget.selectedYear) {
       return Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: const BorderRadius.all(const Radius.circular(23.0)),
+          borderRadius: BorderRadius.all(Radius.circular(23.0)),
         ),
-        margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
-        padding: EdgeInsets.fromLTRB(20, 6, 20, 6),
+        margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+        padding: const EdgeInsets.fromLTRB(20, 6, 20, 6),
         child: Text(
           mesDysplay + ", " + widget.ano.toString(),
           style: GoogleFonts.montserrat(
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
               letterSpacing: 0,
               fontWeight: FontWeight.w600,
               color: Color.fromRGBO(246, 146, 32, 1),
@@ -119,16 +113,16 @@ class _CalendarMonthButtonState extends State<CalendarMonthButton> {
           widget.notifyParent(widget.mes, widget.ano);
         },
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.transparent,
-            borderRadius: const BorderRadius.all(const Radius.circular(23.0)),
+            borderRadius: BorderRadius.all(Radius.circular(23.0)),
           ),
-          margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
-          padding: EdgeInsets.fromLTRB(20, 6, 20, 6),
+          margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+          padding: const EdgeInsets.fromLTRB(20, 6, 20, 6),
           child: Text(
             mesDysplay,
             style: GoogleFonts.montserrat(
-              textStyle: TextStyle(
+              textStyle: const TextStyle(
                 letterSpacing: 0,
                 fontWeight: FontWeight.w500,
                 color: Color.fromRGBO(137, 169, 255, 1),

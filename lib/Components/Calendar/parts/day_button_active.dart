@@ -12,17 +12,7 @@ class CalendarDayActiveButton extends StatelessWidget {
   final int mesTaped;
   final int yearTaped;
 
-  const CalendarDayActiveButton(
-    this.colorCont,
-    this.cor,
-    this.font,
-    this.small,
-    this.numeroParaMostrar,
-    this.selectedMonth,
-    this.selectedYear,
-    this.mesTaped,
-    this.yearTaped,
-  );
+  const CalendarDayActiveButton(this.colorCont, this.cor, this.font, this.small, this.numeroParaMostrar, this.selectedMonth, this.selectedYear, this.mesTaped, this.yearTaped, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +23,11 @@ class CalendarDayActiveButton extends StatelessWidget {
           barrierDismissible: false,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text("Aviso (WIP)"),
-              content:
-                  Text("Qualquer mensagem pode aparecer aqui, qualquer coisa pode ser feita a clicar no dia: $numeroParaMostrar, $mesTaped, $selectedYear"),
+              title: const Text("Aviso (WIP)"),
+              content: Text("Qualquer mensagem pode aparecer aqui, qualquer coisa pode ser feita a clicar no dia: $numeroParaMostrar, $mesTaped, $selectedYear"),
               actions: [
                 TextButton(
-                  child: Text("Ok"),
+                  child: const Text("Ok"),
                   onPressed: () async {
                     Navigator.of(context).pop();
                   },
@@ -53,7 +42,7 @@ class CalendarDayActiveButton extends StatelessWidget {
         margin: small,
         decoration: BoxDecoration(
           color: colorCont,
-          borderRadius: const BorderRadius.all(const Radius.circular(25.0)),
+          borderRadius: const BorderRadius.all(Radius.circular(25.0)),
         ),
         height: 28,
         width: 28,

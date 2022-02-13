@@ -8,13 +8,13 @@ showBrevementeDialog(BuildContext context) {
       return AlertDialog(
         title: RichText(
           text: TextSpan(
-            style: GoogleFonts.montserrat(textStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.black)),
-            children: <TextSpan>[TextSpan(text: 'Selecionar pelo menos 1 dia!', style: TextStyle(fontSize: 15))],
+            style: GoogleFonts.montserrat(textStyle: const TextStyle(fontWeight: FontWeight.w500, color: Colors.black)),
+            children: const <TextSpan>[TextSpan(text: 'Selecionar pelo menos 1 dia!', style: TextStyle(fontSize: 15))],
           ),
         ),
         actions: [
           TextButton(
-            child: Text("Ok"),
+            child: const Text("Ok"),
             onPressed: () async {
               Navigator.of(context).pop();
             },

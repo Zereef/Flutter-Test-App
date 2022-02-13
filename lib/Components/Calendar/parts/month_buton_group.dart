@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_app/Components/Calendar/parts/MonthButton.dart';
+import 'package:test_app/Components/Calendar/parts/month_button.dart';
 
 class MonthButtonGroup extends StatefulWidget {
   final int mes;
@@ -8,13 +8,8 @@ class MonthButtonGroup extends StatefulWidget {
   final int selectedYear;
   final Function notifyParent;
 
-  MonthButtonGroup(
-    this.mes,
-    this.ano,
-    this.selectedMonth,
-    this.selectedYear,
-    this.notifyParent,
-  );
+  const MonthButtonGroup(this.mes, this.ano, this.selectedMonth, this.selectedYear, this.notifyParent, {Key? key}) : super(key: key);
+
   @override
   _MonthButtonGroupState createState() => _MonthButtonGroupState();
 }
@@ -38,7 +33,7 @@ class _MonthButtonGroupState extends State<MonthButtonGroup> {
     }
 
     return Container(
-      padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+      padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
       color: Colors.transparent,
       child: SingleChildScrollView(
         // controller: _controller,

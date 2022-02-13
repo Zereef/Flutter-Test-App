@@ -6,20 +6,20 @@ class AppTheme {
 
   static final ThemeData light = ThemeData(
     scaffoldBackgroundColor: Colors.teal,
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       color: Colors.teal,
       iconTheme: IconThemeData(
         color: Colors.white,
       ),
     ),
-    colorScheme: ColorScheme.light(
+    colorScheme: const ColorScheme.light(
       primary: Colors.white,
       onPrimary: Colors.white,
       secondary: Colors.red,
     ),
-    cardTheme: CardTheme(color: Colors.teal),
-    iconTheme: IconThemeData(color: Colors.white54),
-    textTheme: TextTheme(
+    cardTheme: const CardTheme(color: Colors.teal),
+    iconTheme: const IconThemeData(color: Colors.white54),
+    textTheme: const TextTheme(
       headline1: TextStyle(
         color: Colors.green,
         fontSize: 20.0,
@@ -33,20 +33,20 @@ class AppTheme {
 
   static final ThemeData dark = ThemeData(
     scaffoldBackgroundColor: Colors.black,
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       color: Colors.green,
       iconTheme: IconThemeData(
         color: Colors.white,
       ),
     ),
-    colorScheme: ColorScheme.dark(
+    colorScheme: const ColorScheme.dark(
       primary: Colors.black,
       onPrimary: Colors.black,
       secondary: Colors.red,
     ),
-    cardTheme: CardTheme(color: Colors.black),
-    iconTheme: IconThemeData(color: Colors.white54),
-    textTheme: TextTheme(
+    cardTheme: const CardTheme(color: Colors.black),
+    iconTheme: const IconThemeData(color: Colors.white54),
+    textTheme: const TextTheme(
       headline1: TextStyle(
         color: Colors.green,
         fontSize: 20.0,

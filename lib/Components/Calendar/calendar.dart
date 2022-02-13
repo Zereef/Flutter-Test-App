@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'parts//DayButtonGroup.dart';
-import 'parts/MonthButtonGroup.dart';
+import 'parts/day_button_group.dart';
+import 'parts/month_buton_group.dart';
 
 class Calendar extends StatefulWidget {
+  const Calendar({Key? key}) : super(key: key);
+
   @override
   _CalendarState createState() => _CalendarState();
 }
@@ -78,7 +80,7 @@ class _CalendarState extends State<Calendar> {
     }
     return SafeArea(
       child: Container(
-        margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+        margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
         color: Colors.transparent,
         child: SingleChildScrollView(
           child: Column(
